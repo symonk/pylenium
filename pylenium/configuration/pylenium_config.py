@@ -33,6 +33,8 @@ class PyleniumConfig:
     browser: SupportedBrowser = SupportedBrowser()
     headless: bool = False
     remote: bool = False
+    server: str = LOCALHOST_URL
+    server_port: int = 4444
     browser_size: str = '1366x768'
     browser_version: str = 'latest'
     browser_maximized: bool = True
@@ -50,3 +52,4 @@ class PyleniumConfig:
     click_with_js: bool = False
     sendkeys_with_js: bool = False
     default_selector: str = 'CSS'
+
