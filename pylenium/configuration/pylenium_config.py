@@ -40,6 +40,7 @@ class PyleniumConfig:
     browser_path: str = None
     page_load_strategy: PageLoadingStrategy = PageLoadingStrategy()
     browser_capabilities: BrowserCapabilities = None
+    load_base_url: bool = False
     base_url: ValidUrl = LOCALHOST_URL
     explicit_wait: int = 15000
     polling_interval: int = 200
