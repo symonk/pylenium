@@ -57,10 +57,11 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
 
 ### Configuration :clipboard:
 Pylenium aims to be configurable, but sensible when required to be implicit.  We consider our config a singleton tho,
-when we instantiate the driver, it really shouldn't be modified!
+when we instantiate the driver, it really shouldn't be modified! All options can be seen in the pylenium-pytest plugin
+module.
 
 
-```python
+```
     # => the browser you wish to run tests on
     # => supports: 'chrome', 'firefox' or 'remote'
     --browser=value 
