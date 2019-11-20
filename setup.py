@@ -21,7 +21,7 @@ setup(
     license='Apache Software License 2.0',
     url='https://github.com/symonk/pylenium',
     description='Boilerplate-less, stable end2end tests for web applications',
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     py_modules=['pytest_pylenium'],
     python_requires='!=5.3.*',
     install_requires=['pytest>=5.3.0'],
