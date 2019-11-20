@@ -22,7 +22,7 @@ setup(
     url='https://github.com/symonk/pylenium',
     description='Boilerplate-less, stable end2end test for web applications',
     long_description=read('README.md'),
-    packages=find_packages(where="src"),
+    py_modules=['pytest_pylenium'],
     python_requires='!=5.3.*',
     install_requires=['pytest>=5.3.0'],
     classifiers=[
@@ -36,7 +36,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'Pylenium = pylenium.plugin',
+            'Pylenium = src.pylenium.plugin',
         ],
     },
 )
