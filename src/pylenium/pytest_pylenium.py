@@ -1,3 +1,5 @@
+import pytest
+
 from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.globals import PYLENIUM, CHROME
 
@@ -16,5 +18,9 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     browser = config.getoption('browser')
-
     pylenium_config = PyleniumConfig(browser)
+
+
+@pytest.fixture
+def browser(request):
+    return request.config.getoption('browser')
