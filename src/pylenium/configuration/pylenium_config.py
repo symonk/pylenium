@@ -31,7 +31,7 @@ class PyleniumConfig:
     n.b -> This is considered a singleton, changing it mid run is not advised
 
     Attributes:
-        --browser: The browser in which to execute tests on
+        --browser: The browser in which to execute test on
         --headless: Should the browser run headlessly
         --remote: Should the browser be instantiated for the selenium grid
         --server: Server ip address of the selenium grid

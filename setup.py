@@ -3,7 +3,7 @@
 
 import os
 import codecs
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -20,9 +20,9 @@ setup(
     maintainer_email='jackofspaces@gmail.com',
     license='Apache Software License 2.0',
     url='https://github.com/symonk/pylenium',
-    description='Boilerplate-less, stable end2end tests for web applications',
+    description='Boilerplate-less, stable end2end test for web applications',
     long_description=read('README.md'),
-    py_modules=['pytest_pylenium'],
+    packages=find_packages(where="src"),
     python_requires='!=5.3.*',
     install_requires=['pytest>=5.3.0'],
     classifiers=[
@@ -36,7 +36,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'Pylenium = pytest_pylenium',
+            'Pylenium = pylenium.plugin',
         ],
     },
 )
