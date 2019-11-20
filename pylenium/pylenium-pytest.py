@@ -16,4 +16,5 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     browser = config.getoption('browser')
+
     pylenium_config = PyleniumConfig(browser)

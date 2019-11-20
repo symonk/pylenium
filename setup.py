@@ -1,12 +1,51 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import codecs
 from setuptools import setup
 
+
+def read(fname):
+    file_path = os.path.join(os.path.dirname(__file__), fname)
+    return codecs.open(file_path, encoding='utf-8').read()
+
+
 setup(
-    name='pylenide',
-    version='0.0.1',
-    packages=['pylenium', 'pylenium.tests.unit.commands', 'pylenium.utility'],
-    url='https://github.com/symonk/pylenium',
-    license='MIT',
-    author='symonk',
+    name='pytest-Pylenium',
+    version='0.1.0',
+    author='Simon Kerr',
     author_email='jackofspaces@gmail.com',
-    description='Boilerplate-less, stable end2end testing for web applications'
+    maintainer='Simon Kerr',
+    maintainer_email='jackofspaces@gmail.com',
+    license='Apache Software License 2.0',
+    url='https://github.com/symonk/pytest-Pylenium',
+    description='Boilerplate-less, stable end2end testing for web applications',
+    long_description=read('README.rst'),
+    py_modules=['pytest_pylenium'],
+    python_requires='!=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
+    install_requires=['pytest>=5.3.0'],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Framework :: Pytest',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Testing',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: Apache Software License',
+    ],
+    entry_points={
+        'pytest11': [
+            'Pylenium = pytest_pylenium',
+        ],
+    },
 )
