@@ -12,15 +12,15 @@ def read(fname):
 
 
 setup(
-    name='pytest-Pylenium',
+    name='pylenium',
     version='0.1.0',
     author='Simon Kerr',
     author_email='jackofspaces@gmail.com',
     maintainer='Simon Kerr',
     maintainer_email='jackofspaces@gmail.com',
     license='Apache Software License 2.0',
-    url='https://github.com/symonk/pytest-Pylenium',
-    description='Boilerplate-less, stable end2end testing for web applications',
+    url='https://github.com/symonk/pylenium',
+    description='Boilerplate-less, stable end2end tests for web applications',
     long_description=read('README.rst'),
     py_modules=['pytest_pylenium'],
     python_requires='!=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
