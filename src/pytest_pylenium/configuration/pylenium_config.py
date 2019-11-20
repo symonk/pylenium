@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from pylenium.globals import LOCALHOST_URL
+from src.pytest_pylenium.globals import LOCALHOST_URL
 
 
 @dataclass
 class SupportedBrowser:
-    browser: Browser.CHROME
+    pass
 
 
 @dataclass

@@ -1,19 +1,19 @@
 import pytest
 
-from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.globals import PYLENIUM, CHROME
+from src.pytest_pylenium.configuration.pylenium_config import PyleniumConfig
+from src.pytest_pylenium.globals import PYLENIUM, CHROME
 
 
 def pytest_addoption(parser):
     """
-    Main entry point for pylenium to register configuration / runtime arguments
+    Main entry point for pytest_pylenium to register configuration / runtime arguments
     """
     group = parser.getgroup(PYLENIUM)
     group.addoption('--browser',
                     action='store',
                     dest='browser',
                     default=CHROME,
-                    help='Specify the browser pylenium should use')
+                    help='Specify the browser pytest_pylenium should use')
 
 
 def pytest_configure(config):
