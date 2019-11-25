@@ -21,3 +21,8 @@ def pytest_configure(config):
 @pytest.fixture
 def browser(request):
     return request.config.getoption('browser')
+
+
+@pytest.fixture
+def headless(request):
+    return request.config.getoption('headless')
