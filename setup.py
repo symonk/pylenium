@@ -3,8 +3,6 @@
 
 import os
 import codecs
-from glob import glob
-from os.path import splitext, basename
 
 from setuptools import setup, find_packages
 
@@ -15,7 +13,7 @@ def read(fname):
 
 
 setup(
-    name='pytest_pylenium',
+    name='pytest-pylenium',
     version='0.1.0',
     author='Simon Kerr',
     author_email='jackofspaces@gmail.com',
@@ -23,13 +21,10 @@ setup(
     maintainer_email='jackofspaces@gmail.com',
     license='Apache Software License 2.0',
     url='https://github.com/symonk/pylenium',
-    description='Boilerplate-less, stable end2end test for web applications',
+    description='Boilerplate-less, stable end2end testing for web applications',
     long_description=read('README.md'),
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    extras_require={"test": ["filelock"]},
-    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
-    python_requires='!=5.3.*',
     install_requires=['pytest>=5.3.0'],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -42,7 +37,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'Pylenium = pytest_pylenium.plugin',
+            'pylenium = pylenium.plugin',
         ],
     },
 )

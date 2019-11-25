@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.pytest_pylenium.globals import LOCALHOST_URL
+from pylenium.globals import LOCALHOST_URL
 
 
 @dataclass
@@ -31,7 +31,7 @@ class PyleniumConfig:
     n.b -> This is considered a singleton, changing it mid run is not advised
 
     Attributes:
-        --browser: The browser in which to execute test on
+        --browser: The browser in which to execute testing on
         --headless: Should the browser run headlessly
         --remote: Should the browser be instantiated for the selenium grid
         --server: Server ip address of the selenium grid
@@ -46,9 +46,9 @@ class PyleniumConfig:
         --load_base_url: On driver instantiation, automatically load your applications base url (e.g login page)
         --explicit_wait: Time in milliseconds to explicitly wait for pyleniums smart actions
         --polling_interval: Time in milliseconds to check smart actions predicates to decipher if continuation should occur
-        --screenshot_on_fail: Attach a screenshot of the browser if a test fails
-        --page_source_on_fail: Attach the page source (DOM) of the browser if a test fails
-        --stack_trace_on_fail: Provides basic information regarding the reason behind a test failing
+        --screenshot_on_fail: Attach a screenshot of the browser if a testing fails
+        --page_source_on_fail: Attach the page source (DOM) of the browser if a testing fails
+        --stack_trace_on_fail: Provides basic information regarding the reason behind a testing failing
         --click_with_js: Attempt to do clicks using javascript actions (not selenium click actions)
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
@@ -75,4 +75,3 @@ class PyleniumConfig:
     click_with_js: bool = False
     sendkeys_with_js: bool = False
     default_selector: str = 'CSS'
-

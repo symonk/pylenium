@@ -4,9 +4,7 @@ dist: xenial
 python: 3.7
 
 install:
-  - pip install pipenv
-  - pipenv install --dev
-  - pipenv sync
+  - tox
 script:
   - sonar-scanner -Dsonar.projectKey=symonk_pylenium  -Dsonar.organization=symonk-github
 branches:
@@ -36,7 +34,7 @@ packages:
 
 env:
   pylenium_headless=true
-  pylenium_base_url = 'http://localhost:8000/test/server/static_content/'
+  pylenium_base_url = 'http://localhost:8000/testing/server/static_content/'
 
 after_success:
   - codecov
