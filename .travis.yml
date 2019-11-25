@@ -5,7 +5,8 @@ python: 3.7
 
 install: pip install tox-travis
 script:
-  - tox sonar-scanner -Dsonar.projectKey=symonk_pylenium  -Dsonar.organization=symonk-github
+  - tox
+  - sonar-scanner -Dsonar.projectKey=symonk_pylenium  -Dsonar.organization=symonk-github
 branches:
   only:
     - master
