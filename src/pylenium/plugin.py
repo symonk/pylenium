@@ -1,4 +1,6 @@
 import pytest
+from selenium import webdriver
+
 from pylenium.globals import PYLENIUM, CHROME
 
 
@@ -26,3 +28,9 @@ def browser(request):
 @pytest.fixture
 def headless(request):
     return request.config.getoption('headless')
+
+
+@pytest.fixture
+def driver(request):
+    from webdriver_manager.chrome import ChromeDriverManager
+    yield webdriver.Chrome(ChromeDriverManager().install())
