@@ -65,8 +65,6 @@ module.
 ```python
 @dataclass
 class PyleniumConfig:
-    testing
-
     browser: SupportedBrowser = SupportedBrowser()
     headless: bool = False
     remote: bool = False
