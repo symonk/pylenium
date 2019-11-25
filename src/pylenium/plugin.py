@@ -12,6 +12,10 @@ def pytest_addoption(parser):
                     dest='browser',
                     default=CHROME,
                     help='Specify the browser pylenium should use')
+    group.addoption('--headless',
+                    action='store_true',
+                    dest='headless',
+                    help='Specify if the browser should be headless')
 
 
 def pytest_configure(config):
