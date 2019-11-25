@@ -32,9 +32,5 @@ addons:
 packages:
   - google-chrome-stable
 
-env:
-  pylenium_headless=true
-  pylenium_base_url = 'http://localhost:8000/testing/server/static_content/'
-
 after_success:
   - codecov

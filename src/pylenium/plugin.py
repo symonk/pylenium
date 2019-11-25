@@ -18,10 +18,6 @@ def pytest_addoption(parser):
                     help='Specify if the browser should be headless')
 
 
-def pytest_configure(config):
-    pass
-
-
 @pytest.fixture
 def browser(request):
     return request.config.getoption('browser')
