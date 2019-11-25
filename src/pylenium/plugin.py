@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 from pylenium.globals import PYLENIUM, CHROME
 
@@ -33,4 +34,8 @@ def headless(request):
 @pytest.fixture
 def driver(request):
     from webdriver_manager.chrome import ChromeDriverManager
-    yield webdriver.Chrome(ChromeDriverManager().install())
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    yield webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
