@@ -4,7 +4,6 @@ dist: xenial
 python: 3.7
 
 install:
-  - pip install codecov
   - pip install tox-travis
 script:
   - tox
@@ -33,6 +32,3 @@ addons:
 
 packages:
   - google-chrome-stable
-
-after_success:
-  - codecov
