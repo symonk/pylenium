@@ -1,8 +1,11 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
+from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.globals import PYLENIUM, CHROME
+from pylenium import log
 
 
 def pytest_addoption(parser):
@@ -19,6 +22,10 @@ def pytest_addoption(parser):
                     action='store_true',
                     dest='headless',
                     help='Specify if the browser should be headless')
+
+
+def pytest_configure(config):
+    log.info(f"Pylenium has begun...")
 
 
 @pytest.fixture
@@ -38,4 +45,4 @@ def driver(request):
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    yield webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+    yield EventFiringWebDriver(webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options), PyleniumEventListener())
