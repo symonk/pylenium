@@ -1,3 +1,4 @@
+ASCII = r"""
 =====================================================================================================================
       ___                                   ___           ___                       ___           ___
      /  /\        ___                      /  /\         /__/\        ___          /__/\         /__/\
@@ -14,3 +15,4 @@
 Pylenium execution detected...Firing on all cylinders!
 Pylenium is currently in its alpha stage(s), thanks for giving it a go!
 We appreciate your feedback here: https://github.com/symonk/pylenium
+"""
