@@ -47,6 +47,12 @@ def pytest_addoption(parser):
                     dest='browser_resolution',
                     help='Specify the browser resolution')
 
+    group.addoption('--browser-version',
+                    action='store',
+                    default='latest',
+                    dest='browser_version',
+                    help='Specify the browser version')
+
 
 def pytest_configure(config):
     _configure_metadata()
@@ -89,6 +95,11 @@ def server_port(request):
 @pytest.fixture
 def browser_resolution(request):
     return request.config.getoption('browser_resolution')
+
+
+@pytest.fixture
+def browser_version(request):
+    return request.config.getoption('browser_version')
 
 
 @pytest.fixture
