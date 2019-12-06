@@ -36,6 +36,7 @@ def pytest_addoption(parser):
     group.addoption('--port',
                     action='store',
                     default=4444,
+                    type=int,
                     dest='port',
                     help='Specify the selenium hub port')
 
