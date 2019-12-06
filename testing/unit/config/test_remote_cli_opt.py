@@ -28,7 +28,3 @@ def test_remote_disabled(testdir):
         '*::test_remote_disabled PASSED*',
     ])
     assert result.ret == 0
-
-
-def test_remote_with_browser_equals(testdir):
-    pass

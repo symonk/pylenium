@@ -36,7 +36,7 @@ class PyleniumConfig:
         --remote: Should the browser be instantiated for the selenium grid
         --server: Server ip address of the selenium grid
         --server_port: Server port of the selenium grid
-        --browser_size: Size of the instantiated browser window
+        --browser_resolution: Size of the instantiated browser window
         --browser_version: Version of the browser we should attempt to automatically aquire (unnecessary with --remote=True)
         --browser_maximized: Should the browser instantiated be maximized
         --aquire_binary: Should we aquire the binary automatically and cache it locally
@@ -58,7 +58,7 @@ class PyleniumConfig:
     remote: bool = False
     server: str = LOCALHOST_URL
     server_port: int = 4444
-    browser_size: str = '1366x768'
+    browser_resolution: str = '1366x768'
     browser_version: str = 'latest'
     browser_maximized: bool = True
     aquire_binary: bool = True

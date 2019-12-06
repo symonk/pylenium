@@ -34,12 +34,18 @@ def pytest_addoption(parser):
                     default='http://localhost',
                     help='Specify the selenium hub server url')
 
-    group.addoption('--port',
+    group.addoption('--server_port',
                     action='store',
                     default=4444,
                     type=int,
-                    dest='port',
+                    dest='server_port',
                     help='Specify the selenium hub port')
+
+    group.addoption('--browser-resolution',
+                    action='store',
+                    default='1920x1080',
+                    dest='browser_resolution',
+                    help='Specify the browser resolution')
 
 
 def pytest_configure(config):
@@ -76,8 +82,13 @@ def server(request):
 
 
 @pytest.fixture
-def port(request):
-    return request.config.getoption('port')
+def server_port(request):
+    return request.config.getoption('server_port')
+
+
+@pytest.fixture
+def browser_resolution(request):
+    return request.config.getoption('browser_resolution')
 
 
 @pytest.fixture
