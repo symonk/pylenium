@@ -1,8 +1,9 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from pylenium.globals import PYLENIUM, CHROME
+from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG
 from pylenium import log
+from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
 
 
@@ -42,7 +43,16 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
+    _configure_metadata()
+
+
+def _configure_metadata():
     log.info(ASCII)
+    plugin_log_seperate()
+    plugin_log_message(EXEC_STARTED)
+    plugin_log_message(RELEASE_INFO)
+    plugin_log_message(GRATITUDE_MSG)
+    plugin_log_seperate()
 
 
 @pytest.fixture
