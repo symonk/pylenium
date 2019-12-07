@@ -12,12 +12,19 @@
 [![Find_Me Slack](https://img.shields.io/badge/Find_Me-Slack-brightgreen.svg)](https://testersio.slack.com)
 
 ## What is pytest-pylenium? :flags: 
-Pylenium is a test automation framework written in python, it has two simple goals:  Increase stability and time to market
-when building automated testing solutions for a frontend web application with python.  Using pytest as the test runner it boosts an assortment of feature(s) to make encapsulating web applications and executing tests on distributed architecture.
+Pylenium is a frontend automated test framework for driving end to end tests of user interface(s).  Written in Python
+and running with pytest it allows a quick time to market on your automated tests while erradicating flakyness through
+smart waiting and various other mechanisms to make selenium more test-friendly.
 
-Why couple tightly to pytest? There are plenty of options in the python-selenium world for unittest etc, I struggled to find a nice pytest alternative that didn't compromise and prevent usage of some of pytests most powerful features.
+Pylenium Goals:
+ - Quickly write *stable* end 2 end web application frontend tests
+ - Support xdist for parallel execution of tests
+ - Support distributed selenium grid setups to increase parallelisation even more
+ - Expose an intuitive interface so building bigger projects is easy, but also writing simple scripts is easy too!
 
-n.b: pytest-pylenium does not and will never try to support: Python versions less than 3.7 OR running on alternative test runners (e.g nose/unittest)
+#### Important Notes:
+ - pytest-pylenium will *never* attempt to support python versions less than 3.7
+ - pytest-pylenium will *never* attempt to support alternative test runners to pytest e.g (nose/unittest etc)
 
 ```python
     @pylenium_case_information(case='testcase-101', issue_id='issue-949', description='Logging in is so easy!')
