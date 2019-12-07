@@ -1,0 +1,3 @@
+ignore:
+  - "testing"  # ignore folders and all its contents
+  - "**/__init__.py"
