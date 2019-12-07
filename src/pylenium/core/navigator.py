@@ -15,21 +15,12 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from pylenium.core.navigator import Navigator
-from pylenium.elements.pylenium_element import PyleniumElement
-from pylenium.waiting.pylenium_wait import PyleniumWait
 
 
-class PyleniumDriver:
+class Navigator:
 
-    def __init__(self, config, driver_to_wrap):
-        self.config = config
-        self.driver = driver_to_wrap
-        self.driver._web_element_cls = PyleniumElement
-        self.navigator = Navigator()
+    def open(self, driver, url):
+        pass
 
-    def open(self, url):
-        return self.navigator.open(self.driver, url)
-
-    def wait(self) -> PyleniumWait:
-        return PyleniumWait(self.driver, self.config.explicit_wait, self.config.polling_interval)
+    def _navigate_to(self):
+        pass
