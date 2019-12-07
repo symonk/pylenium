@@ -49,10 +49,10 @@ def test_override_id(testdir):
 def test_override_xpath(testdir):
     testdir.makepyfile("""
         def test_override(default_selector):
-            assert default_selector == 'xpath'
+            assert default_selector == 'id'
     """)
     result = testdir.runpytest(
-        '--default-selector=xpath',
+        '--default-selector=id',
         '-v'
     )
     result.stdout.fnmatch_lines([
