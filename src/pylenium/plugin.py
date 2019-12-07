@@ -76,6 +76,12 @@ def pytest_addoption(parser):
                     choices=['slow', 'normal', 'fast'],
                     help='Specify the page loading strategy')
 
+    group.addoption('--browser-capabilities-file',
+                    action='store',
+                    default='',
+                    dest='browser_capabilities',
+                    help='Specify a python file which contains a dictionary outlining browser capabilities')
+
     group.addoption('--page-source-on-fail',
                     action='store',
                     default=False,
@@ -159,6 +165,11 @@ def driver_binary_path(request):
 @pytest.fixture
 def page_load_strategy(request):
     return request.config.getoption('page_load_strategy')
+
+
+@pytest.fixture
+def browser_capabilities_file(request):
+    return request.config.getoption('browser_capabilities')
 
 
 @pytest.fixture
