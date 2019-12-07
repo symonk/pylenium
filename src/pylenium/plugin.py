@@ -1,7 +1,9 @@
 import pytest
+from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
+from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.drivers.pylenium_driver import PyleniumDriver
 from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG
@@ -147,6 +149,7 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     _configure_metadata()
+    config.pylenium_config = PyleniumConfig()
 
 
 def _configure_metadata():
@@ -259,11 +262,16 @@ def default_selector(request):
 
 
 @pytest.fixture
-def driver(request):
+def pylenium_config(request):
+    return request.config.pylenium_config
+
+
+@pytest.fixture
+def driver(request, pylenium_config):
     from webdriver_manager.chrome import ChromeDriverManager
     chrome_options = Options()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    yield EventFiringWebDriver(PyleniumDriver(ChromeDriverManager().install(), options=chrome_options),
-                               PyleniumEventListener())
+    driver = PyleniumDriver(pylenium_config, webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options))
+    yield EventFiringWebDriver(PyleniumDriver(pylenium_config, driver), PyleniumEventListener())

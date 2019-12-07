@@ -15,12 +15,3 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from pylenium.elements.pylenium_element import PyleniumElement
-
-
-class PyleniumDriver:
-
-    def __init__(self, config, driver_to_wrap):
-        self.config = config
-        self.driver = driver_to_wrap
-        self.driver._web_element_cls = PyleniumElement
