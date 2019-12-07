@@ -21,10 +21,10 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
-from pylenium.configuration.pylenium_config import PyleniumConfig, ChromeBrowser
+from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.drivers.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
-from pylenium.globals import FIREFOX, REMOTE
+from pylenium.globals import FIREFOX, REMOTE, CHROME
 
 
 class ChromeDriverFactory:
@@ -56,7 +56,7 @@ class DriverFactory:
         browser = config.browser
         is_remote = config.remote
 
-        if browser == ChromeBrowser:
+        if browser == CHROME:
             return ChromeDriverFactory()(config)
         elif browser == FIREFOX:
             return FireFoxDriverFactory()(config)
