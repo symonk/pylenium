@@ -37,7 +37,7 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile("""
         def test_override(browser_capabilities_file):
-            assert page_load_strategy == "~/project/capabilities.py"
+            assert browser_capabilities_file == "~/project/capabilities.py"
     """)
     result = testdir.runpytest(
         '--browser-capabilities-file-strategy=~/project/capabilities.py',
