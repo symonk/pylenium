@@ -53,6 +53,8 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
             return self
 ```
 
+---
+
 ### Pytest Fixtures :star:
 Pylenium exposes a ton of helpful fixtures for your tests, these are outlined below including their scopes and autouse
 declarations.
