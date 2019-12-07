@@ -32,7 +32,7 @@ Pylenium Goals:
 Human readable, concise and most importantly **stable!**
 
 ```python
-    @pylenium_case_information(case='testcase-101', issue_id='issue-949', description='Logging in is so easy!')
+    @pytest.mark.pylenium(case='testcase-101', issue_id='issue-949', description='Logging in is so easy!')
     def test_my_login():
       start('http://www.google.co.uk')
       find(name('user.name')).set_value('simon')
