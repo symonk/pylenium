@@ -22,9 +22,9 @@ from pylenium.waiting.pylenium_wait import PyleniumWait
 
 class PyleniumDriver:
 
-    def __init__(self, config, wrapped_driver):
+    def __init__(self, config, driver_to_wrap):
         self.config = config
-        self.wrapped_driver = wrapped_driver
+        self.wrapped_driver = driver_to_wrap
         self.wrapped_driver._web_element_cls = PyleniumElement
         self.navigator = Navigator()
 
