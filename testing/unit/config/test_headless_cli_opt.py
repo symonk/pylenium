@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-def test_headless_enabled(testdir):
+def test_default(testdir):
     testdir.makepyfile("""
-        def test_headless_enabled(headless):
+        def test_default(headless):
+            assert not headless
+    """)
+    result = testdir.runpytest(
+        '-v'
+    )
+    result.stdout.fnmatch_lines([
+        '*::test_default PASSED*',
+    ])
+    assert result.ret == 0
+
+
+def test_override(testdir):
+    testdir.makepyfile("""
+        def test_override(headless):
             assert headless
     """)
     result = testdir.runpytest(
@@ -11,20 +25,6 @@ def test_headless_enabled(testdir):
         '-v'
     )
     result.stdout.fnmatch_lines([
-        '*::test_headless_enabled PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_headless_disabled(testdir):
-    testdir.makepyfile("""
-        def test_headless_disabled(headless):
-            assert not headless
-    """)
-    result = testdir.runpytest(
-        '-v'
-    )
-    result.stdout.fnmatch_lines([
-        '*::test_headless_disabled PASSED*',
+        '*::test_override PASSED*',
     ])
     assert result.ret == 0

@@ -20,6 +20,7 @@ def pytest_addoption(parser):
 
     group.addoption('--headless',
                     action='store_true',
+                    default=False,
                     dest='headless',
                     help='Specify if the browser should be headless')
 
@@ -52,6 +53,18 @@ def pytest_addoption(parser):
                     default='latest',
                     dest='browser_version',
                     help='Specify the browser version')
+
+    group.addoption('--aquire-binary',
+                    action='store_true',
+                    default=False,
+                    dest='aquire_binary',
+                    help='Specify if pylenium should aquire the chrome binary version specified or latest')
+
+    group.addoption('--driver-binary-path',
+                    action='store',
+                    default='',
+                    dest='driver_binary_path',
+                    help='If not using aquire binary, set the directory pylenium should look for the driver bianary')
 
 
 def pytest_configure(config):
@@ -100,6 +113,16 @@ def browser_resolution(request):
 @pytest.fixture
 def browser_version(request):
     return request.config.getoption('browser_version')
+
+
+@pytest.fixture
+def aquire_binary(request):
+    return request.config.getoption('aquire_binary')
+
+
+@pytest.fixture
+def driver_binary_path(request):
+    return request.config.getoption('driver_binary_path')
 
 
 @pytest.fixture

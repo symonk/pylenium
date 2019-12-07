@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-def test_remote_enabled(testdir):
+def test_default(testdir):
     testdir.makepyfile("""
-        def test_remote_enabled(remote):
+        def test_default(remote):
+            assert not remote
+    """)
+    result = testdir.runpytest(
+        '-v'
+    )
+    result.stdout.fnmatch_lines([
+        '*::test_default PASSED*',
+    ])
+    assert result.ret == 0
+
+
+def test_override(testdir):
+    testdir.makepyfile("""
+        def test_override(remote):
             assert remote
     """)
     result = testdir.runpytest(
@@ -11,20 +25,6 @@ def test_remote_enabled(testdir):
         '-v'
     )
     result.stdout.fnmatch_lines([
-        '*::test_remote_enabled PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_remote_disabled(testdir):
-    testdir.makepyfile("""
-        def test_remote_disabled(remote):
-            assert not remote
-    """)
-    result = testdir.runpytest(
-        '-v'
-    )
-    result.stdout.fnmatch_lines([
-        '*::test_remote_disabled PASSED*',
+        '*::test_override PASSED*',
     ])
     assert result.ret == 0

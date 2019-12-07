@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-def test_server_default(testdir):
+def test_default(testdir):
     testdir.makepyfile("""
-        def test_server_stored(server):
+        def test_default(server):
             assert server == 'http://localhost'
     """)
     result = testdir.runpytest(
         '-v'
     )
     result.stdout.fnmatch_lines([
-        '*::test_server_stored PASSED*',
+        '*::test_default PASSED*',
     ])
     assert result.ret == 0
 

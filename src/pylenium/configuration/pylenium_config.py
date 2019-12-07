@@ -40,7 +40,7 @@ class PyleniumConfig:
         --browser_version: Version of the browser we should attempt to automatically aquire (unnecessary with --remote=True)
         --browser_maximized: Should the browser instantiated be maximized
         --aquire_binary: Should we aquire the binary automatically and cache it locally
-        --browser_path: If you do not want to aquire the binary, the path to your chromedriver or geckodriver binary
+        --driver_binary_path: If you do not want to aquire the binary, the path to your chromedriver or geckodriver binary
         --page_load_strategy: The strategy we should use to load page(s) and ensure it is time to proceed
         --browser_capabilities: Path to a file containing a dictionary of your browser capabilities @default None
         --load_base_url: On driver instantiation, automatically load your applications base url (e.g login page)
@@ -62,7 +62,7 @@ class PyleniumConfig:
     browser_version: str = 'latest'
     browser_maximized: bool = True
     aquire_binary: bool = True
-    browser_path: str = None
+    driver_binary_path: str = None
     page_load_strategy: PageLoadingStrategy = PageLoadingStrategy()
     browser_capabilities: BrowserCapabilities = None
     load_base_url: bool = False

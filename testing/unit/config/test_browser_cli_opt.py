@@ -1,38 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-def test_browser_chrome(testdir):
+def test_default(testdir):
     testdir.makepyfile("""
-        def test_chrome(browser):
-            assert browser == "chrome"
-    """)
-    result = testdir.runpytest(
-        '--browser=chrome',
-        '-v'
-    )
-    result.stdout.fnmatch_lines([
-        '*::test_chrome PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_browser_without_anything(testdir):
-    testdir.makepyfile("""
-        def test_no_argument(browser):
+        def test_default(browser):
             assert browser == "CHROME"
     """)
     result = testdir.runpytest(
         '-v'
     )
     result.stdout.fnmatch_lines([
-        '*::test_no_argument PASSED*',
+        '*::test_default PASSED*',
     ])
     assert result.ret == 0
 
 
-def test_browser_firefox(testdir):
+def test_override(testdir):
     testdir.makepyfile("""
-        def test_firefox(browser):
+        def test_override(browser):
             assert browser == "firefox"
     """)
     result = testdir.runpytest(
@@ -40,6 +25,6 @@ def test_browser_firefox(testdir):
         '-v'
     )
     result.stdout.fnmatch_lines([
-        '*::test_firefox PASSED*',
+        '*::test_override PASSED*',
     ])
     assert result.ret == 0
