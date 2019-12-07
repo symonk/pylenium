@@ -32,7 +32,7 @@
 def test_default(testdir):
     testdir.makepyfile("""
         def test_default(explicit_wait):
-            assert explicit_wait == 30'
+            assert explicit_wait == 30
     """)
     result = testdir.runpytest(
         '-v'
@@ -46,7 +46,7 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile("""
         def test_override(explicit_wait):
-            assert explicit_wait == 5'
+            assert explicit_wait == 5
     """)
     result = testdir.runpytest(
         '--explicit-wait=5',

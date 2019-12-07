@@ -41,7 +41,7 @@
 def test_default(testdir):
     testdir.makepyfile("""
         def test_default(polling_interval):
-            assert polling_interval == 0.25'
+            assert polling_interval == 0.25
     """)
     result = testdir.runpytest(
         '-v'
@@ -55,7 +55,7 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile("""
         def test_override(polling_interval):
-            assert polling_interval == 0.1'
+            assert polling_interval == 0.1
     """)
     result = testdir.runpytest(
         '--polling-interval=0.1',

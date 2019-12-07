@@ -82,7 +82,7 @@ def pytest_addoption(parser):
                     dest='browser_capabilities',
                     help='Specify a python file which contains a dictionary outlining browser capabilities')
 
-    group.addoption('--base_url',
+    group.addoption('--base-url',
                     action='store',
                     dest='base_url',
                     default='http://localhost:8080',
@@ -97,7 +97,7 @@ def pytest_addoption(parser):
 
     group.addoption('--polling-interval',
                     action='store',
-                    type=int,
+                    type=float,
                     default=0.25,
                     dest='polling_interval',
                     help='Specify how long pylenium should poll during explicit waiting conditions')
