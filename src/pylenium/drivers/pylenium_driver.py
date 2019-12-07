@@ -15,3 +15,14 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from selenium import webdriver
+from pylenium.elements.pylenium_element import PyleniumElement
+
+
+class PyleniumDriver(webdriver.Chrome):
+    _web_element_cls = PyleniumElement
+
+    def __init__(self, executable_path="chromedriver", port=0, options=None, service_args=None,
+                 desired_capabilities=None, service_log_path=None, chrome_options=None, keep_alive=True):
+        super().__init__(executable_path, port, options, service_args, desired_capabilities, service_log_path,
+                         chrome_options, keep_alive)
