@@ -274,4 +274,4 @@ def driver(request, pylenium_config):
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     driver = PyleniumDriver(pylenium_config, webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options))
-    yield EventFiringWebDriver(PyleniumDriver(pylenium_config, driver), PyleniumEventListener())
+    yield EventFiringWebDriver(PyleniumDriver(pylenium_config, driver).driver, PyleniumEventListener())
