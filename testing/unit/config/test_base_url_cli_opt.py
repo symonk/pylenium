@@ -19,11 +19,10 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 def test_default(testdir):
     testdir.makepyfile("""
-        def test_default(browser_capabilities_file):
-            assert not browser_capabilities_file
+        def test_default(base_url):
+            assert base_url == 'http://localhost:8080'
     """)
     result = testdir.runpytest(
         '-v'
@@ -36,11 +35,11 @@ def test_default(testdir):
 
 def test_override(testdir):
     testdir.makepyfile("""
-        def test_override(browser_capabilities_file):
-            assert browser_capabilities_file == "~/project/capabilities.py"
+        def test_override(base_url):
+            assert base_url == 'http://www.google.com'
     """)
     result = testdir.runpytest(
-        '--browser-capabilities-file=~/project/capabilities.py',
+        '--base-url=http://www.google.com',
         '-v'
     )
     result.stdout.fnmatch_lines([

@@ -82,6 +82,26 @@ def pytest_addoption(parser):
                     dest='browser_capabilities',
                     help='Specify a python file which contains a dictionary outlining browser capabilities')
 
+    group.addoption('--base_url',
+                    action='store',
+                    dest='base_url',
+                    default='http://localhost:8080',
+                    help='Specify a base url to launch when any drivers are instantiated')
+
+    group.addoption('--explicit-wait',
+                    action='store',
+                    type=int,
+                    default=30,
+                    dest='explicit_wait',
+                    help='Specify how long smart waiting in pylenium should give as a grace period')
+
+    group.addoption('--polling-interval',
+                    action='store',
+                    type=int,
+                    default=0.25,
+                    dest='polling_interval',
+                    help='Specify how long pylenium should poll during explicit waiting conditions')
+
     group.addoption('--page-source-on-fail',
                     action='store',
                     default=False,
@@ -165,6 +185,21 @@ def driver_binary_path(request):
 @pytest.fixture
 def page_load_strategy(request):
     return request.config.getoption('page_load_strategy')
+
+
+@pytest.fixture
+def base_url(request):
+    return request.config.getoption('base_url')
+
+
+@pytest.fixture
+def explicit_wait(request):
+    return request.config.getoption('explicit_wait')
+
+
+@pytest.fixture
+def polling_interval(request):
+    return request.config.getoption('polling_interval')
 
 
 @pytest.fixture
