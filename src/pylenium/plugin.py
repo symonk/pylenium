@@ -123,6 +123,27 @@ def pytest_addoption(parser):
                     dest='store_stack_trace',
                     help='Store stack trace info for each test in the event of failures')
 
+    group.addoption('--click-with-js',
+                    action='store',
+                    type=bool,
+                    default=False,
+                    dest='click_with_js',
+                    help='Attempt to do clicks using a javascript wraparound')
+
+    group.addoption('--sendkeys-with-js',
+                    action='store',
+                    type=bool,
+                    default=False,
+                    dest='sendkeys_with_js',
+                    help='Attempt to do sendkeys using a javascript wraparound')
+
+    group.addoption('--default-selector',
+                    action='store',
+                    default='css',
+                    dest='default_selector',
+                    choices=['css', 'id', 'xpath'],
+                    help='When no locator is specified, default to this value')
+
 
 def pytest_configure(config):
     _configure_metadata()
@@ -223,8 +244,22 @@ def store_stack_trace_on_fail(request):
 
 
 @pytest.fixture
+def click_with_js(request):
+    return request.config.getoption('click_with_js')
+
+
+@pytest.fixture
+def sendkeys_with_js(request):
+    return request.config.getoption('sendkeys_with_js')
+
+
+@pytest.fixture
+def default_selector(request):
+    return request.config.getoption('default_selector')
+
+
+@pytest.fixture
 def driver(request):
-    # some magic for travis for now...
     from webdriver_manager.chrome import ChromeDriverManager
     chrome_options = Options()
     chrome_options.add_argument('--headless')

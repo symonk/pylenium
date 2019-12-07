@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #  MIT License
 #
 #  Copyright (c) 2019 Simon Kerr
@@ -22,8 +19,8 @@
 
 def test_default(testdir):
     testdir.makepyfile("""
-        def test_default(page_load_strategy):
-            assert page_load_strategy == "normal"
+        def test_default(click_with_js):
+            assert not click_with_js
     """)
     result = testdir.runpytest(
         '-v'
@@ -34,46 +31,16 @@ def test_default(testdir):
     assert result.ret == 0
 
 
-def test_override_fast(testdir):
+def test_override(testdir):
     testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "fast"
+        def test_override(click_with_js):
+            assert click_with_js
     """)
     result = testdir.runpytest(
-        '--page-load-strategy=fast',
+        '--click-with-js=True',
         '-v'
     )
     result.stdout.fnmatch_lines([
         '*::test_override PASSED*',
     ])
     assert result.ret == 0
-
-
-def test_override_slow(testdir):
-    testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "slow"
-    """)
-    result = testdir.runpytest(
-        '--page-load-strategy=slow',
-        '-v'
-    )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_override_unsupported(testdir):
-    testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            pass
-    """)
-    result = testdir.runpytest(
-        '--page-load-strategy=notallowed',
-        '-v'
-    )
-    result.stderr.fnmatch_lines([
-        "*--page-load-strategy: invalid choice: 'notallowed' (choose from 'slow', 'normal', 'fast')*"
-    ])
-    assert result.ret == 4

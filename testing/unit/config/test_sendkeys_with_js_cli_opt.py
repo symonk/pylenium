@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #  MIT License
 #
 #  Copyright (c) 2019 Simon Kerr
@@ -19,11 +16,19 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
+#  MIT License
+#
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+#  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+#  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+#  and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+#
 def test_default(testdir):
     testdir.makepyfile("""
-        def test_default(page_load_strategy):
-            assert page_load_strategy == "normal"
+        def test_default(sendkeys_with_js):
+            assert not sendkeys_with_js
     """)
     result = testdir.runpytest(
         '-v'
@@ -34,46 +39,16 @@ def test_default(testdir):
     assert result.ret == 0
 
 
-def test_override_fast(testdir):
+def test_override(testdir):
     testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "fast"
+        def test_override(sendkeys_with_js):
+            assert sendkeys_with_js
     """)
     result = testdir.runpytest(
-        '--page-load-strategy=fast',
+        '--sendkeys-with-js=True',
         '-v'
     )
     result.stdout.fnmatch_lines([
         '*::test_override PASSED*',
     ])
     assert result.ret == 0
-
-
-def test_override_slow(testdir):
-    testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "slow"
-    """)
-    result = testdir.runpytest(
-        '--page-load-strategy=slow',
-        '-v'
-    )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_override_unsupported(testdir):
-    testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            pass
-    """)
-    result = testdir.runpytest(
-        '--page-load-strategy=notallowed',
-        '-v'
-    )
-    result.stderr.fnmatch_lines([
-        "*--page-load-strategy: invalid choice: 'notallowed' (choose from 'slow', 'normal', 'fast')*"
-    ])
-    assert result.ret == 4

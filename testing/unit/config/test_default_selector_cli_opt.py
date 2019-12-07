@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #  MIT License
 #
 #  Copyright (c) 2019 Simon Kerr
@@ -22,8 +19,8 @@
 
 def test_default(testdir):
     testdir.makepyfile("""
-        def test_default(page_load_strategy):
-            assert page_load_strategy == "normal"
+        def test_default(default_selector):
+            assert default_selector == 'css'
     """)
     result = testdir.runpytest(
         '-v'
@@ -34,13 +31,13 @@ def test_default(testdir):
     assert result.ret == 0
 
 
-def test_override_fast(testdir):
+def test_override_id(testdir):
     testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "fast"
+        def test_override(default_selector):
+            assert default_selector == 'id'
     """)
     result = testdir.runpytest(
-        '--page-load-strategy=fast',
+        '--default-selector=id',
         '-v'
     )
     result.stdout.fnmatch_lines([
@@ -49,13 +46,13 @@ def test_override_fast(testdir):
     assert result.ret == 0
 
 
-def test_override_slow(testdir):
+def test_override_xpath(testdir):
     testdir.makepyfile("""
-        def test_override(page_load_strategy):
-            assert page_load_strategy == "slow"
+        def test_override(default_selector):
+            assert default_selector == 'xpath'
     """)
     result = testdir.runpytest(
-        '--page-load-strategy=slow',
+        '--default-selector=xpath',
         '-v'
     )
     result.stdout.fnmatch_lines([
@@ -66,14 +63,14 @@ def test_override_slow(testdir):
 
 def test_override_unsupported(testdir):
     testdir.makepyfile("""
-        def test_override(page_load_strategy):
+        def test_override(default_selector):
             pass
     """)
     result = testdir.runpytest(
-        '--page-load-strategy=notallowed',
+        '--default-selector=notallowed',
         '-v'
     )
     result.stderr.fnmatch_lines([
-        "*--page-load-strategy: invalid choice: 'notallowed' (choose from 'slow', 'normal', 'fast')*"
+        "*--default-selector: invalid choice: 'notallowed' (choose from 'css', 'id', 'xpath')*"
     ])
     assert result.ret == 4
