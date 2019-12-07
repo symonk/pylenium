@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 
 from pylenium.globals import PYTEST_XDIST_WORKER
 

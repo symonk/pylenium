@@ -22,5 +22,5 @@ from pylenium.elements.pylenium_element import PyleniumElement
 
 def test_element_type(driver):
     driver.get('http://localhost:1337')
-    assert_that(driver.find_element_by_xpath("//a[text() = 'start_page.html']").wrapped_element)\
+    assert_that(driver.find_element_by_xpath("//a[text() = 'start_page.html']").wrapped_element) \
         .is_instance_of(PyleniumElement)

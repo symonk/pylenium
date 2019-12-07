@@ -2,12 +2,12 @@ from ._version import VERSION
 
 PYLENIUM = 'Pylenium'
 CHROME = 'CHROME'
+FIREFOX = 'FIREFOX'
+REMOTE = 'REMOTE'
 LOCALHOST_URL = 'http://localhost:8080'
-
 
 # PYTEST XDIST
 PYTEST_XDIST_WORKER = 'PYTEST_XDIST_WORKER'
-
 
 # PLUGIN MISC
 EXEC_STARTED = 'Pylenium-pytest has been loaded... Firing on all cylinders!'

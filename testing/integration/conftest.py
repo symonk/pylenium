@@ -1,8 +1,8 @@
 import os
 import time
+from subprocess import Popen
 
 import pytest
-from subprocess import Popen
 
 PORT = '1337'
 DIRECTORY = os.path.join(__file__.replace('conftest.py', ''), 'static_content')

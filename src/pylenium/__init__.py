@@ -1,6 +1,7 @@
-from . import _version as __version__
 import logging
 import sys
+
+from . import _version as __version__
 
 __all__ = ["__version__"]
 

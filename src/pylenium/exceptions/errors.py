@@ -1,3 +1,2 @@
-
 class PyAssertionError(AssertionError):
     pass

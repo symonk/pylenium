@@ -1,11 +1,6 @@
 from dataclasses import dataclass
 
-from pylenium.globals import LOCALHOST_URL
-
-
-@dataclass
-class SupportedBrowser:
-    pass
+from pylenium.globals import LOCALHOST_URL, CHROME
 
 
 @dataclass
@@ -53,7 +48,7 @@ class PyleniumConfig:
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
     """
-    browser: SupportedBrowser = SupportedBrowser()
+    browser: str = CHROME
     headless: bool = False
     remote: bool = False
     server: str = LOCALHOST_URL
