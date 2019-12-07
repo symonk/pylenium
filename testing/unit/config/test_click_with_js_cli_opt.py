@@ -18,29 +18,28 @@
 
 
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(click_with_js):
             assert not click_with_js
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(click_with_js):
             assert click_with_js
-    """)
-    result = testdir.runpytest(
-        '--click-with-js=True',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--click-with-js=True", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

@@ -18,30 +18,28 @@
 
 
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(driver_binary_path):
             assert driver_binary_path == '~/example/path/chromedriver'
-    """)
-    result = testdir.runpytest(
-        '--driver-binary-path=~/example/path/chromedriver',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("--driver-binary-path=~/example/path/chromedriver", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(driver_binary_path):
             assert not driver_binary_path
-    """)
-    result = testdir.runpytest(
-        '--aquire-binary',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--aquire-binary", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

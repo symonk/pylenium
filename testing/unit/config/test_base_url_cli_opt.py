@@ -19,30 +19,30 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(base_url):
             assert base_url == 'http://localhost:8080'
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(base_url):
             assert base_url == 'http://www.google.com'
-    """)
-    result = testdir.runpytest(
-        '--base-url=http://www.google.com',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--base-url=http://www.google.com", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

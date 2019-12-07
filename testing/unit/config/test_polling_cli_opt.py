@@ -39,29 +39,28 @@
 #
 #
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(polling_interval):
             assert polling_interval == 0.25
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(polling_interval):
             assert polling_interval == 0.1
-    """)
-    result = testdir.runpytest(
-        '--polling-interval=0.1',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--polling-interval=0.1", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

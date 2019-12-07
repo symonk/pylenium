@@ -19,5 +19,7 @@ from selenium.webdriver.support.wait import WebDriverWait, POLL_FREQUENCY
 
 
 class PyleniumWait(WebDriverWait):
-    def __init__(self, driver, timeout, poll_frequency=POLL_FREQUENCY, ignored_exceptions=None):
+    def __init__(
+        self, driver, timeout, poll_frequency=POLL_FREQUENCY, ignored_exceptions=None
+    ):
         super().__init__(driver, timeout, poll_frequency, ignored_exceptions)

@@ -3,7 +3,7 @@ import os
 
 from pylenium.globals import PYTEST_XDIST_WORKER
 
-log = logging.getLogger('Pylenium')
+log = logging.getLogger("Pylenium")
 
 
 def is_master_process():

@@ -48,13 +48,14 @@ class PyleniumConfig:
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
     """
+
     browser: str = CHROME
     headless: bool = False
     remote: bool = False
     server: str = LOCALHOST_URL
     server_port: int = 4444
-    browser_resolution: str = '1366x768'
-    browser_version: str = 'latest'
+    browser_resolution: str = "1366x768"
+    browser_version: str = "latest"
     browser_maximized: bool = True
     aquire_binary: bool = True
     driver_binary_path: str = None
@@ -69,4 +70,4 @@ class PyleniumConfig:
     stack_trace_on_fail: bool = False
     click_with_js: bool = False
     sendkeys_with_js: bool = False
-    default_selector: str = 'CSS'
+    default_selector: str = "CSS"

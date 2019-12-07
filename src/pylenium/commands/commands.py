@@ -28,6 +28,5 @@ class Command(ABC):
 
 
 class GetTextCommand(Command):
-
     def execute(self) -> str:
         pass

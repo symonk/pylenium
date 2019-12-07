@@ -21,7 +21,6 @@ from pylenium.waiting.pylenium_wait import PyleniumWait
 
 
 class PyleniumDriver:
-
     def __init__(self, config, driver_to_wrap):
         self.config = config
         self.wrapped_driver = driver_to_wrap
@@ -32,4 +31,6 @@ class PyleniumDriver:
         return self.navigator.open(self.wrapped_driver, url)
 
     def wait(self) -> PyleniumWait:
-        return PyleniumWait(self.wrapped_driver, self.config.explicit_wait, self.config.polling_interval)
+        return PyleniumWait(
+            self.wrapped_driver, self.config.explicit_wait, self.config.polling_interval
+        )

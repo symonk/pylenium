@@ -29,7 +29,7 @@ class Commander:
         self._commands.clear()
 
     def _add_element_information_commands(self):
-        self._register('get_text', GetTextCommand)
+        self._register("get_text", GetTextCommand)
 
     def _register(self, method: str, command: Type[Command]):
         self._commands.update({method: command})

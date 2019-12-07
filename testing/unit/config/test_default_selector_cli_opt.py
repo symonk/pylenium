@@ -18,59 +18,56 @@
 
 
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(default_selector):
             assert default_selector == 'css'
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override_id(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(default_selector):
             assert default_selector == 'id'
-    """)
-    result = testdir.runpytest(
-        '--default-selector=id',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--default-selector=id", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override_xpath(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(default_selector):
             assert default_selector == 'id'
-    """)
-    result = testdir.runpytest(
-        '--default-selector=id',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--default-selector=id", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override_unsupported(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(default_selector):
             pass
-    """)
-    result = testdir.runpytest(
-        '--default-selector=xpath',
-        '-v'
+    """
     )
-    result.stderr.fnmatch_lines([
-        "*--default-selector: invalid choice: 'xpath' (choose from 'css', 'id')*"
-    ])
+    result = testdir.runpytest("--default-selector=xpath", "-v")
+    result.stderr.fnmatch_lines(
+        ["*--default-selector: invalid choice: 'xpath' (choose from 'css', 'id')*"]
+    )
     assert result.ret == 4

@@ -18,29 +18,28 @@
 
 
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(store_page_source_on_fail):
             assert not store_page_source_on_fail
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(store_page_source_on_fail):
             assert store_page_source_on_fail
-    """)
-    result = testdir.runpytest(
-        '--page-source-on-fail=True',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest("--page-source-on-fail=True", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

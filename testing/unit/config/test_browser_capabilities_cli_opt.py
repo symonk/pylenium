@@ -21,29 +21,30 @@
 
 
 def test_default(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_default(browser_capabilities_file):
             assert not browser_capabilities_file
-    """)
-    result = testdir.runpytest(
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_default PASSED*',
-    ])
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
     assert result.ret == 0
 
 
 def test_override(testdir):
-    testdir.makepyfile("""
+    testdir.makepyfile(
+        """
         def test_override(browser_capabilities_file):
             assert browser_capabilities_file == "~/project/capabilities.py"
-    """)
-    result = testdir.runpytest(
-        '--browser-capabilities-file=~/project/capabilities.py',
-        '-v'
+    """
     )
-    result.stdout.fnmatch_lines([
-        '*::test_override PASSED*',
-    ])
+    result = testdir.runpytest(
+        "--browser-capabilities-file=~/project/capabilities.py", "-v"
+    )
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
     assert result.ret == 0

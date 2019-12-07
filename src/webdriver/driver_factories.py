@@ -28,29 +28,33 @@ from pylenium.globals import FIREFOX, REMOTE, CHROME
 
 
 class ChromeDriverFactory:
-
     def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
         chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        return PyleniumDriver(config, webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options))
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        return PyleniumDriver(
+            config,
+            webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options),
+        )
 
 
 class FireFoxDriverFactory:
-
     def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
         return PyleniumDriver(config, webdriver.Firefox(GeckoDriverManager().install()))
 
 
 class RemoteWebDriverFactory:
-
     def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
-        return PyleniumDriver(config, webdriver.Remote(command_executor=f"{config.server}:{config.server_port}/wd/hub"))
+        return PyleniumDriver(
+            config,
+            webdriver.Remote(
+                command_executor=f"{config.server}:{config.server_port}/wd/hub"
+            ),
+        )
 
 
 class DriverFactory:
-
     @staticmethod
     def instantiate(config: PyleniumConfig) -> PyleniumDriver:
         browser = config.browser

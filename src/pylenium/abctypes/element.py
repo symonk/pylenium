@@ -5,7 +5,6 @@ from selenium.webdriver.remote.webelement import WebElement
 
 
 class IPyleniumElementLocator(metaclass=ABC):
-
     @abstractmethod
     def find(self) -> WebElement:
         pass
@@ -20,7 +19,6 @@ class IPyleniumElementLocator(metaclass=ABC):
 
 
 class IPyleniumListElementLocator(metaclass=ABC):
-
     @abstractmethod
     def find(self) -> List[WebElement]:
         pass

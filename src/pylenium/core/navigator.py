@@ -18,7 +18,6 @@
 
 
 class Navigator:
-
     def open(self, driver, url):
         pass
 

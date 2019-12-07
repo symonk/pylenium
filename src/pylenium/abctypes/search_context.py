@@ -6,7 +6,6 @@ from selenium.webdriver.remote.webelement import WebElement
 
 
 class ISearchContext(metaclass=ABC):
-
     @abstractmethod
     def find_element(self, by: By, value=None) -> WebElement:
         raise NotImplementedError

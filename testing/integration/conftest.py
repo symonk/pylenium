@@ -4,11 +4,11 @@ from subprocess import Popen
 
 import pytest
 
-PORT = '1337'
-DIRECTORY = os.path.join(__file__.replace('conftest.py', ''), 'static_content')
+PORT = "1337"
+DIRECTORY = os.path.join(__file__.replace("conftest.py", ""), "static_content")
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def pylenium_httpserver(request):
     os.chdir(DIRECTORY)
     server_process = Popen(["python", "-m", "http.server", PORT])
