@@ -34,10 +34,10 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile("""
         def test_override(store_stack_trace_on_fail):
-            assert store_page_source_on_failure
+            assert store_stack_trace_on_fail
     """)
     result = testdir.runpytest(
-        '--stack-trace-on-fail',
+        '--stack-trace-on-fail=True',
         '-v'
     )
     result.stdout.fnmatch_lines([

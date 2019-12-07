@@ -34,10 +34,10 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile("""
         def test_override(store_screenshot_on_fail):
-            assert store_page_source_on_failure
+            assert store_screenshot_on_fail
     """)
     result = testdir.runpytest(
-        '--screenshot-on-fail',
+        '--screenshot-on-fail=True',
         '-v'
     )
     result.stdout.fnmatch_lines([

@@ -67,20 +67,23 @@ def pytest_addoption(parser):
                     help='If not using aquire binary, set the directory pylenium should look for the driver bianary')
 
     group.addoption('--page-source-on-fail',
-                    action='store_true',
+                    action='store',
                     default=False,
+                    type=bool,
                     dest='store_page_source',
                     help='Store page source HTML for each test in the event of failures')
 
     group.addoption('--screenshot-on-fail',
-                    action='store_true',
+                    action='store',
                     default=False,
+                    type=bool,
                     dest='store_screenshot',
                     help='Store screenshot for each test in the event of failures')
 
     group.addoption('--stack-trace-on-fail',
-                    action='store_true',
+                    action='store',
                     default=False,
+                    type=bool,
                     dest='store_stack_trace',
                     help='Store stack trace info for each test in the event of failures')
 
