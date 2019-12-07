@@ -67,10 +67,10 @@ def test_override_unsupported(testdir):
             pass
     """)
     result = testdir.runpytest(
-        '--default-selector=notallowed',
+        '--default-selector=xpath',
         '-v'
     )
     result.stderr.fnmatch_lines([
-        "*--default-selector: invalid choice: 'notallowed' (choose from 'css', 'id', 'xpath')*"
+        "*--default-selector: invalid choice: 'xpath' (choose from 'css', 'id')*"
     ])
     assert result.ret == 4

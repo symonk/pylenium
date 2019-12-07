@@ -141,7 +141,7 @@ def pytest_addoption(parser):
                     action='store',
                     default='css',
                     dest='default_selector',
-                    choices=['css', 'id', 'xpath'],
+                    choices=['css', 'id'],
                     help='When no locator is specified, default to this value')
 
 
