@@ -66,6 +66,24 @@ def pytest_addoption(parser):
                     dest='driver_binary_path',
                     help='If not using aquire binary, set the directory pylenium should look for the driver bianary')
 
+    group.addoption('--page-source-on-fail',
+                    action='store_true',
+                    default=False,
+                    dest='store_page_source',
+                    help='Store page source HTML for each test in the event of failures')
+
+    group.addoption('--screenshot-on-fail',
+                    action='store_true',
+                    default=False,
+                    dest='store_screenshot',
+                    help='Store screenshot for each test in the event of failures')
+
+    group.addoption('--stack-trace-on-fail',
+                    action='store_true',
+                    default=False,
+                    dest='store_stack_trace',
+                    help='Store stack trace info for each test in the event of failures')
+
 
 def pytest_configure(config):
     _configure_metadata()
@@ -123,6 +141,21 @@ def aquire_binary(request):
 @pytest.fixture
 def driver_binary_path(request):
     return request.config.getoption('driver_binary_path')
+
+
+@pytest.fixture
+def store_page_source_on_fail(request):
+    return request.config.getoption('store_page_source')
+
+
+@pytest.fixture
+def store_screenshot_on_fail(request):
+    return request.config.getoption('store_screenshot')
+
+
+@pytest.fixture
+def store_stack_trace_on_fail(request):
+    return request.config.getoption('store_stack_trace')
 
 
 @pytest.fixture

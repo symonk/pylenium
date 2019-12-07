@@ -52,6 +52,15 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
             self._text_field_on_login_page.should_have(Text(value))
             return self
 ```
+
+### Pytest Fixtures :star:
+Pylenium exposes a ton of helpful fixtures for your tests, these are outlined below including their scopes and autouse
+declarations.
+
+```python
+def example():
+    pass
+```
     
 ---
 
