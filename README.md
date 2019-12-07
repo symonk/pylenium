@@ -17,14 +17,19 @@ and running with pytest it allows a quick time to market on your automated tests
 smart waiting and various other mechanisms to make selenium more test-friendly.
 
 Pylenium Goals:
- - Quickly write *stable* end 2 end web application frontend tests
+ - Quickly write **stable** end 2 end web application frontend tests
  - Support xdist for parallel execution of tests
  - Support distributed selenium grid setups to increase parallelisation even more
  - Expose an intuitive interface so building bigger projects is easy, but also writing simple scripts is easy too!
 
 #### Important Notes:
- - pytest-pylenium will *never* attempt to support python versions less than 3.7
- - pytest-pylenium will *never* attempt to support alternative test runners to pytest e.g (nose/unittest etc)
+ - pytest-pylenium will **never** attempt to support python versions less than 3.7
+ - pytest-pylenium will **never** attempt to support alternative test runners to pytest e.g (nose/unittest etc)
+ 
+ ---
+ 
+### Simple Example :hearts:
+Human readable, concise and most importantly **stable!**
 
 ```python
     @pylenium_case_information(case='testcase-101', issue_id='issue-949', description='Logging in is so easy!')
