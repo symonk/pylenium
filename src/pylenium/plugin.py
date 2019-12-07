@@ -69,6 +69,13 @@ def pytest_addoption(parser):
                     dest='driver_binary_path',
                     help='If not using aquire binary, set the directory pylenium should look for the driver bianary')
 
+    group.addoption('--page-load-strategy',
+                    action='store',
+                    default='normal',
+                    dest='page_load_strategy',
+                    choices=['slow', 'normal', 'fast'],
+                    help='Specify the page loading strategy')
+
     group.addoption('--page-source-on-fail',
                     action='store',
                     default=False,
@@ -147,6 +154,11 @@ def aquire_binary(request):
 @pytest.fixture
 def driver_binary_path(request):
     return request.config.getoption('driver_binary_path')
+
+
+@pytest.fixture
+def page_load_strategy(request):
+    return request.config.getoption('page_load_strategy')
 
 
 @pytest.fixture
