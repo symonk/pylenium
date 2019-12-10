@@ -18,6 +18,9 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import os
+
+from __project_root__ import ROOT_DIR
 
 
 def test_default(testdir):
@@ -48,9 +51,8 @@ def test_cap_file_dict(testdir):
             assert pylenium_config.browser_capabilities['browserstack.chrome.driver'] == '2.43'
     """
     )
-    result = testdir.runpytest(
-        "--browser-capabilities-file=C://workspace//pylenium//testing//test_files//browser_stack_capabilities.yaml", "-v"
-    )
+    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'browser_stack_capabilities.yaml')
+    result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )
@@ -61,13 +63,14 @@ def test_cannot_find_yaml_file(testdir):
     testdir.makepyfile(
         """
         def test_override(pylenium_config):
-        from pylenium.exceptions.exceptions import PyleniumCapabilitiesException
+            from pylenium.exceptions.exceptions import PyleniumCapabilitiesException
             with pytest.raises(PyleniumCapabilitiesException) as e_info:
                 pass
     """
     )
+    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'bad_yaml_format.yaml')
     result = testdir.runpytest(
-        "--browser-capabilities-file=nofile", "-v"
+        f"--browser-capabilities-file={test_file}", "-v"
     )
     result.stderr.fnmatch_lines(
         ["*pylenium.exceptions.exceptions.PyleniumCapabilitiesException*",]
@@ -79,13 +82,14 @@ def test_yaml_bad_format(testdir):
     testdir.makepyfile(
         """
         def test_override(pylenium_config):
-        from pylenium.exceptions.exceptions import PyleniumInvalidYamlException
+            from pylenium.exceptions.exceptions import PyleniumInvalidYamlException
             with pytest.raises(PyleniumInvalidYamlException) as e_info:
                 pass
     """
     )
+    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'bad_yaml_format.yaml')
     result = testdir.runpytest(
-        "--browser-capabilities-file=C://workspace//pylenium//testing//test_files//bad_yaml_format.yaml", "-v"
+        f"--browser-capabilities-file={test_file}", "-v"
     )
     result.stderr.fnmatch_lines(
         ["*pylenium.exceptions.exceptions.PyleniumInvalidYamlException*",]
