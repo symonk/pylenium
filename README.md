@@ -80,6 +80,24 @@ def example():
     
 ---
 
+### Pylenium Desired Capabilities :star:
+Configuring browser capabilities is easy with pylenium, just pass us a --browser-capabilities-file=[FILE_PATH] at runtime
+and we will do the rest, the file should be a .yaml format and adhere to the yaml spec, see below:
+
+```yaml
+Capabilities:
+    'os': 'Windows'
+    'os_version': 'Sierra'
+    'browser': 'Chrome'
+    'browser_version': '79.0'
+    'browserstack.local': 'false'
+    'browserstack.selenium_version': '3.14.0'
+    'browserstack.chrome.driver': '2.43'
+
+```
+    
+---
+
 ### Configuration :clipboard:
 Pylenium aims to be configurable, but sensible when required to be implicit.  We consider our config a singleton tho,
 when we instantiate the driver, it really shouldn't be modified! All options can be seen in the pylenium-pytest plugin
