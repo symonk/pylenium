@@ -68,7 +68,7 @@ def test_cannot_find_yaml_file(testdir):
                 pass
     """
     )
-    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'bad_yaml_format.yaml')
+    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'browser_stack_capabilities2.yaml')
     result = testdir.runpytest(
         f"--browser-capabilities-file={test_file}", "-v"
     )
