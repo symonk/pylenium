@@ -1,0 +1,8 @@
+Capabilities:
+    'os': 'Windows'
+    'os_version': 'Sierra'
+    'browser': 'Chrome'
+    'browser_version': '79.0'
+    'browserstack.local': 'false'
+    'browserstack.selenium_version': '3.14.0'
+    'browserstack.chrome.driver': '2.43'
