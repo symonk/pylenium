@@ -39,6 +39,13 @@ def test_cap_file_dict(testdir):
         """
         def test_override(pylenium_config):
             assert isinstance(pylenium_config.browser_capabilities, dict)
+            assert pylenium_config.browser_capabilities['os'] == 'Windows'
+            assert pylenium_config.browser_capabilities['os_version'] == 'Sierra'
+            assert pylenium_config.browser_capabilities['browser'] == 'Chrome'
+            assert pylenium_config.browser_capabilities['browser_version'] == '79.0'
+            assert pylenium_config.browser_capabilities['browserstack.local'] == 'false'
+            assert pylenium_config.browser_capabilities['browserstack.selenium_version'] == '3.14.0'
+            assert pylenium_config.browser_capabilities['browserstack.chrome.driver'] == '2.43'
     """
     )
     result = testdir.runpytest(
