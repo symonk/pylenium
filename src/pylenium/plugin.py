@@ -7,7 +7,7 @@ from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
-from pylenium.webdriver import DriverFactory
+from pylenium.webdriver.driver_factories import DriverFactory
 
 
 def pytest_addoption(parser):
