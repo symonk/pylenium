@@ -34,17 +34,53 @@ def test_default(testdir):
     assert result.ret == 0
 
 
-def test_override(testdir):
+def test_cap_file_dict(testdir):
     testdir.makepyfile(
         """
-        def test_override(browser_capabilities_file):
-            assert browser_capabilities_file == "~/project/capabilities.py"
+        def test_override(pylenium_config):
+            assert isinstance(pylenium_config.browser_capabilities, dict)
     """
     )
     result = testdir.runpytest(
-        "--browser-capabilities-file=~/project/capabilities.py", "-v"
+        "--browser-capabilities-file=C://workspace//pylenium//testing//test_files//browser_stack_capabilities.yaml", "-v"
     )
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )
     assert result.ret == 0
+
+
+def test_cannot_find_yaml_file(testdir):
+    testdir.makepyfile(
+        """
+        def test_override(pylenium_config):
+        from pylenium.exceptions.exceptions import PyleniumCapabilitiesException
+            with pytest.raises(PyleniumCapabilitiesException) as e_info:
+                pass
+    """
+    )
+    result = testdir.runpytest(
+        "--browser-capabilities-file=nofile", "-v"
+    )
+    result.stderr.fnmatch_lines(
+        ["*pylenium.exceptions.exceptions.PyleniumCapabilitiesException*",]
+    )
+    assert result.ret == 3
+
+
+def test_yaml_bad_format(testdir):
+    testdir.makepyfile(
+        """
+        def test_override(pylenium_config):
+        from pylenium.exceptions.exceptions import PyleniumInvalidYamlException
+            with pytest.raises(PyleniumInvalidYamlException) as e_info:
+                pass
+    """
+    )
+    result = testdir.runpytest(
+        "--browser-capabilities-file=C://workspace//pylenium//testing//test_files//bad_yaml_format.yaml", "-v"
+    )
+    result.stderr.fnmatch_lines(
+        ["*pylenium.exceptions.exceptions.PyleniumInvalidYamlException*",]
+    )
+    assert result.ret == 3

@@ -1,10 +1,14 @@
 import pytest
+import yaml
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
+from yaml.parser import ParserError
 
 from pylenium import log
 from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.drivers.event_listener import PyleniumEventListener
-from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG
+from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
+from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG, NO_CAP_FILE_FOUND_EXCEPTION, \
+    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
 from pylenium.webdriver.driver_factories import DriverFactory
@@ -187,7 +191,12 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     _configure_metadata()
-    config.pylenium_config = PyleniumConfig()
+    py_config = PyleniumConfig()
+
+    cap_file_path = config.getoption('browser_capabilities')
+    if cap_file_path:
+        py_config.browser_capabilities = _try_parse_capabilities_yaml(cap_file_path)
+    config.pylenium_config = py_config
 
 
 def _configure_metadata():
@@ -197,6 +206,17 @@ def _configure_metadata():
     plugin_log_message(RELEASE_INFO)
     plugin_log_message(GRATITUDE_MSG)
     plugin_log_seperate()
+
+
+def _try_parse_capabilities_yaml(file_path) -> dict:
+    try:
+        with open(file_path, 'r') as yaml_file:
+            parsed_yaml = yaml.safe_load(yaml_file)
+            return parsed_yaml['Capabilities']
+    except FileNotFoundError:
+        raise PyleniumCapabilitiesException(NO_CAP_FILE_FOUND_EXCEPTION)
+    except ParserError:
+        raise PyleniumInvalidYamlException(CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE)
 
 
 @pytest.fixture

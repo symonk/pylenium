@@ -55,3 +55,11 @@ class PyleniumProxyException(Exception):
 
 class PyleniumArgumentException(Exception):
     pass
+
+
+class PyleniumCapabilitiesException(Exception):
+    pass
+
+
+class PyleniumInvalidYamlException(Exception):
+    pass
