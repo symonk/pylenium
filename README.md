@@ -45,6 +45,23 @@ Human readable, concise and most importantly **stable!**
         start(ExampleLoginPage()) # page loaded, page object instantiated!
 ```
 
+Other examples
+---
+```python
+def test_no_driver():   
+    # no need to directly use a driver to find elements, pylenium is smart with thread local management
+    open("https://www.google.com")
+    element = find("#some_locator") # default configurable through the plugin --default-locator
+    another_element = XPATH("//*[@class='cool']")
+    
+    # slick assertions?
+    element = find("#locator").should_be(visible()).should_have(text("Click Me"))
+    
+    # chaining?
+    element = XPATH("//*[@class='find']").child("span").should_be(hidden())
+```
+
+
 ---
 
 ### Page Objects :hearts:
@@ -65,22 +82,6 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
             self._text_field_on_login_page.set_text(value)
             self._text_field_on_login_page.should_have(Text(value))
             return self             
-```
-
-Other examples
----
-```python
-def test_no_driver():   
-    # no need to directly use a driver to find elements, pylenium is smart with thread local management
-    open("https://www.google.com")
-    element = find("#some_locator") # default configurable through the plugin --default-locator
-    another_element = XPATH("//*[@class='cool']")
-    
-    # slick assertions?
-    element = find("#locator").should_be(visible()).should_have(text("Click Me"))
-    
-    # chaining?
-    element = XPATH("//*[@class='find']").child("span").should_be(hidden())
 ```
 
 ---
