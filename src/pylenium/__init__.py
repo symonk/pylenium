@@ -2,8 +2,9 @@ import logging
 import sys
 
 from . import _version as __version__
+from pylenium.pylenium_core import find, find_all
 
-__all__ = ["__version__"]
+__all__ = ["__version__", "find", "find_all"]
 
 log = logging.getLogger("Pylenium")
 log.setLevel(logging.DEBUG)

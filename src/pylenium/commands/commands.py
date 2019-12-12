@@ -19,7 +19,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 
-class Command(ABC):
+class PyleniumCommand(ABC):
     """The command interface declares a method for executing a command"""
 
     @abstractmethod
@@ -27,6 +27,6 @@ class Command(ABC):
         pass
 
 
-class GetTextCommand(Command):
+class GetTextCommand(PyleniumCommand):
     def execute(self) -> str:
         pass

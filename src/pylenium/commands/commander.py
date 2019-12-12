@@ -17,7 +17,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from typing import Type
 
-from pylenium.commands.commands import Command, GetTextCommand
+from pylenium.commands.commands import PyleniumCommand, GetTextCommand
 
 
 class Commander:
@@ -31,5 +31,5 @@ class Commander:
     def _add_element_information_commands(self):
         self._register("get_text", GetTextCommand)
 
-    def _register(self, method: str, command: Type[Command]):
+    def _register(self, method: str, command: Type[PyleniumCommand]):
         self._commands.update({method: command})

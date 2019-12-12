@@ -49,7 +49,8 @@ class RemoteWebDriverFactory:
         return PyleniumDriver(
             config,
             webdriver.Remote(
-                command_executor=f"{config.server}:{config.server_port}/wd/hub"
+                command_executor=f"{config.server}:{config.server_port}/wd/hub",
+                desired_capabilities=config.browser_capabilities
             ),
         )
 
