@@ -64,7 +64,23 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
         def set_the_text(self, value: str) -> ExampleLoginPage:
             self._text_field_on_login_page.set_text(value)
             self._text_field_on_login_page.should_have(Text(value))
-            return self
+            return self             
+```
+
+Other examples
+---
+```python
+def test_no_driver():   
+    # no need to directly use a driver to find elements, pylenium is smart with thread local management
+    open("https://www.google.com")
+    element = find("#some_locator") # default configurable through the plugin --default-locator
+    another_element = XPATH("//*[@class='cool']")
+    
+    # slick assertions?
+    element = find("#locator").should_be(visible()).should_have(text("Click Me"))
+    
+    # chaining?
+    element = XPATH("//*[@class='find']").child("span").should_be(hidden())
 ```
 
 ---
@@ -74,8 +90,10 @@ Pylenium exposes a ton of helpful fixtures for your tests, these are outlined be
 declarations.
 
 ```python
-def example():
-    pass
+import pylenium
+
+def test_something_cool(driver):
+    driver.open("https://www.google.com")
 ```
     
 ---
