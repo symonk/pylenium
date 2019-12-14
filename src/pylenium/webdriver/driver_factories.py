@@ -89,9 +89,3 @@ class DriverFactory:
             raise PyleniumArgumentException()
         cls.driver_store.pydriver = driver
         return driver if not wrap_driver else EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
-
-
-@dataclass
-class ThreadLocalDriver:
-    uuid: str
-    driver: PyleniumDriver
