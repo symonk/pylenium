@@ -17,6 +17,9 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from selenium.webdriver.common import by
 
+from pylenium.elements.pylenium_element import PyleniumElement
+from pylenium.webdriver.driver_factories import DriverFactory
+
 
 def id(value: str):
     return by.ID(value)
@@ -56,3 +59,11 @@ def find(locator):
 
 def find_all(locator):
     pass
+
+
+def get_web_driver():
+    return DriverFactory.get_webdriver()
+
+
+def XPATH(selector) -> PyleniumElement:
+    return get_web_driver().wrapped_driver.find_element_by_xpath(selector)

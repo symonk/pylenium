@@ -47,6 +47,7 @@ class PyleniumConfig:
         --click_with_js: Attempt to do clicks using javascript actions (not selenium click actions)
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
+        --no-wrap-driver: Should pylenium wrap the driver instance in our own EventFiringWebDriver
     """
 
     browser: str = CHROME
@@ -71,3 +72,4 @@ class PyleniumConfig:
     click_with_js: bool = False
     sendkeys_with_js: bool = False
     default_selector: str = "CSS"
+    wrap_driver: bool = True

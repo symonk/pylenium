@@ -15,16 +15,23 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import threading
+import logging
+from dataclasses import dataclass
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.configuration.pylenium_config import PyleniumConfig
+from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.drivers.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.globals import FIREFOX, REMOTE, CHROME
+
+log = logging.getLogger('pylenium')
 
 
 class ChromeDriverFactory:
@@ -56,16 +63,35 @@ class RemoteWebDriverFactory:
 
 
 class DriverFactory:
-    @staticmethod
-    def instantiate(config: PyleniumConfig) -> PyleniumDriver:
-        browser = config.browser
-        is_remote = config.remote
 
+    driver_store = threading.local()
+    config = None
+
+    @classmethod
+    def get_webdriver(cls, config: PyleniumConfig = None) -> PyleniumDriver:
+        if hasattr(cls.driver_store, 'pydriver'):
+            log.info(f"Web driver already instantiated for this thread, returning it")
+            return cls.driver_store.pydriver
+
+        if cls.config is None and config:
+            cls.config = config
+
+        browser = cls.config.browser
+        is_remote = cls.config.remote
+        wrap_driver = cls.config.wrap_driver
         if browser == CHROME:
-            return ChromeDriverFactory()(config)
+            driver = ChromeDriverFactory()(config)
         elif browser == FIREFOX:
-            return FireFoxDriverFactory()(config)
-        if browser == REMOTE or is_remote:
-            return RemoteWebDriverFactory()(config)
+            driver = FireFoxDriverFactory()(config)
+        elif browser == REMOTE or is_remote:
+            driver = RemoteWebDriverFactory()(config)
         else:
             raise PyleniumArgumentException()
+        cls.driver_store.pydriver = driver
+        return driver if not wrap_driver else EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
+
+
+@dataclass
+class ThreadLocalDriver:
+    uuid: str
+    driver: PyleniumDriver

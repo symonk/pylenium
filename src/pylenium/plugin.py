@@ -1,11 +1,9 @@
 import pytest
 import yaml
-from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 from yaml.parser import ParserError
 
 from pylenium import log
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
 from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG, NO_CAP_FILE_FOUND_EXCEPTION, \
     CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
@@ -188,6 +186,14 @@ def pytest_addoption(parser):
         help="When no locator is specified, default to this value",
     )
 
+    group.addoption(
+        "--no-wrap-driver",
+        action="store_true",
+        default=False,
+        dest="wrap_driver",
+        help="Should pylenium wrap the driver in an EventFiringWebDriver instance with our own listener"
+    )
+
 
 def pytest_configure(config):
     _configure_metadata()
@@ -320,11 +326,15 @@ def default_selector(request):
 
 
 @pytest.fixture
+def wrap_driver(request):
+    return request.config.getoption("wrap_driver")
+
+
+@pytest.fixture
 def pylenium_config(request):
     return request.config.pylenium_config
 
 
 @pytest.fixture
 def driver(pylenium_config):
-    driver = DriverFactory.instantiate(pylenium_config)
-    yield EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
+    yield DriverFactory.get_webdriver(pylenium_config)

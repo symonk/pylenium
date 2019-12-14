@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 #  MIT License
 #
 #  Copyright (c) 2019 Simon Kerr
@@ -15,29 +18,30 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from pylenium.core.navigator import Navigator
-from pylenium.elements.pylenium_element import PyleniumElement
-from pylenium.waiting.pylenium_wait import PyleniumWait
+
+def test_default(testdir):
+    testdir.makepyfile(
+        """
+        def test_default(wrap_driver):
+            assert not wrap_driver
+    """
+    )
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
+    assert result.ret == 0
 
 
-class PyleniumDriver:
-    def __init__(self, config, driver_to_wrap):
-        self.config = config
-        self.wrapped_driver = driver_to_wrap
-        self.wrapped_driver._web_element_cls = PyleniumElement
-        self.navigator = Navigator()
-
-    def open(self, url):
-        return self.navigator.open(self.wrapped_driver, url)
-
-    def wait(self) -> PyleniumWait:
-        return PyleniumWait(
-            self.wrapped_driver, self.config.explicit_wait, self.config.polling_interval
-        )
-
-    def get(self, url: str):
-        self.wrapped_driver.get(url)
-        return self
-
-    def xpath(self, expression: str) -> PyleniumElement:
-        return self.wrapped_driver.find_element_by_xpath(expression)
+def test_override(testdir):
+    testdir.makepyfile(
+        """
+        def test_override(wrap_driver):
+            assert wrap_driver
+    """
+    )
+    result = testdir.runpytest("--no-wrap-driver", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
+    assert result.ret == 0
