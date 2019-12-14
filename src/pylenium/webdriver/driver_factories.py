@@ -17,7 +17,6 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import threading
 import logging
-from dataclasses import dataclass
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
