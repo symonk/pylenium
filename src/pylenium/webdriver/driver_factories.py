@@ -88,3 +88,9 @@ class DriverFactory:
             raise PyleniumArgumentException()
         cls.thread_local_drivers.pydriver = driver
         return driver if not wrap_driver else EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
+
+    @classmethod
+    def destroy(cls):
+        if hasattr(cls.thread_local_drivers, 'pydriver'):
+            cls.thread_local_drivers.pydriver.quit()
+            del cls.thread_local_drivers.pydriver

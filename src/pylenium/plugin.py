@@ -336,5 +336,6 @@ def pylenium_config(request):
 
 
 @pytest.fixture
-def driver(pylenium_config):
+def driver(pylenium_config, request):
     yield DriverFactory.get_webdriver(pylenium_config)
+    request.addfinalizer(DriverFactory.destroy)

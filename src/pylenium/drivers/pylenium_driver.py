@@ -35,6 +35,9 @@ class PyleniumDriver:
             self.wrapped_driver, self.config.explicit_wait, self.config.polling_interval
         )
 
+    def quit(self):
+        self.wrapped_driver.close()
+
     def get(self, url: str):
         self.wrapped_driver.get(url)
         return self
