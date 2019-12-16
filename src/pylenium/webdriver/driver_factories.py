@@ -63,14 +63,14 @@ class RemoteWebDriverFactory:
 
 class DriverFactory:
 
-    driver_store = threading.local()
+    thread_local_drivers = threading.local()
     config = None
 
     @classmethod
     def get_webdriver(cls, config: PyleniumConfig = None) -> PyleniumDriver:
-        if hasattr(cls.driver_store, 'pydriver'):
+        if hasattr(cls.thread_local_drivers, 'pydriver'):
             log.info(f"Web driver already instantiated for this thread, returning it")
-            return cls.driver_store.pydriver
+            return cls.thread_local_drivers.pydriver
 
         if cls.config is None and config:
             cls.config = config
@@ -86,5 +86,5 @@ class DriverFactory:
             driver = RemoteWebDriverFactory()(config)
         else:
             raise PyleniumArgumentException()
-        cls.driver_store.pydriver = driver
+        cls.thread_local_drivers.pydriver = driver
         return driver if not wrap_driver else EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
