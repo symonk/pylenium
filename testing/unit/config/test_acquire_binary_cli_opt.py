@@ -40,7 +40,7 @@ def test_override(testdir):
             assert acquire_binary
     """
     )
-    result = testdir.runpytest("--acquire_binary", "-v")
+    result = testdir.runpytest("--acquire-binary", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

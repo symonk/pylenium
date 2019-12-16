@@ -38,7 +38,7 @@ def test_override(testdir):
             assert not driver_binary_path
     """
     )
-    result = testdir.runpytest("--aquire-binary", "-v")
+    result = testdir.runpytest("--acquire-binary", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )
