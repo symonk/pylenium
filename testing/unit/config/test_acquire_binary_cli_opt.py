@@ -22,8 +22,8 @@
 def test_default(testdir):
     testdir.makepyfile(
         """
-        def test_default(aquire_binary):
-            assert not aquire_binary
+        def test_default(acquire_binary):
+            assert not acquire_binary
     """
     )
     result = testdir.runpytest("-v")
@@ -36,11 +36,11 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile(
         """
-        def test_override(aquire_binary):
-            assert aquire_binary
+        def test_override(acquire_binary):
+            assert acquire_binary
     """
     )
-    result = testdir.runpytest("--aquire-binary", "-v")
+    result = testdir.runpytest("--acquire_binary", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

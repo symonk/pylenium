@@ -74,11 +74,11 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--aquire-binary",
+        "--acquire-binary",
         action="store_true",
         default=False,
-        dest="aquire_binary",
-        help="Specify if pylenium should aquire the chrome binary version specified or latest",
+        dest="acquire_binary",
+        help="Specify if pylenium should acquire the chrome binary version specified or latest",
     )
 
     group.addoption(
@@ -86,7 +86,7 @@ def pytest_addoption(parser):
         action="store",
         default="",
         dest="driver_binary_path",
-        help="If not using aquire binary, set the directory pylenium should look for the driver bianary",
+        help="If not using acquire binary, set the directory pylenium should look for the driver bianary",
     )
 
     group.addoption(
@@ -261,8 +261,8 @@ def browser_version(request):
 
 
 @pytest.fixture
-def aquire_binary(request):
-    return request.config.getoption("aquire_binary")
+def acquire_binary(request):
+    return request.config.getoption("acquire_binary")
 
 
 @pytest.fixture
