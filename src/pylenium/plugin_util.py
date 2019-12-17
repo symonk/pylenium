@@ -1,7 +1,7 @@
 import logging
 import os
 
-from pylenium.globals import PYTEST_XDIST_WORKER
+from pylenium.string_globals import PYTEST_XDIST_WORKER
 
 log = logging.getLogger("Pylenium")
 

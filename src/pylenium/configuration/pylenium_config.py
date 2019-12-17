@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from pylenium.globals import LOCALHOST_URL, CHROME
+from pylenium.drivers.driver_management import Singleton
+from pylenium.string_globals import LOCALHOST_URL, CHROME
 
 
 @dataclass
@@ -19,7 +20,7 @@ class ValidUrl:
 
 
 @dataclass
-class PyleniumConfig:
+class PyleniumConfig(metaclass=Singleton):
     """
     Pyleniums core config, this is built as part of the plugins parse args
     Pylenium will assume sensible default value(s) here

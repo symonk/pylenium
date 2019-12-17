@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 import pytest
 import yaml
 from yaml.parser import ParserError
 
 from pylenium import log
-from pylenium.configuration.pylenium_config import PyleniumConfig
+from pylenium.drivers.driver_management import ThreadLocalDriverManager
 from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
-from pylenium.globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG, NO_CAP_FILE_FOUND_EXCEPTION, \
-    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
-from pylenium.webdriver.driver_factories import DriverFactory
+from pylenium.string_globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG, \
+    NO_CAP_FILE_FOUND_EXCEPTION, \
+    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
 
 
 def pytest_addoption(parser):
@@ -187,15 +189,16 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--no-wrap-driver",
-        action="store_true",
-        default=False,
-        dest="wrap_driver",
-        help="Should pylenium wrap the driver in an EventFiringWebDriver instance with our own listener"
+        "--driver-listener",
+        action="store",
+        default=None,
+        dest="driver_listener",
+        help="File path to your .py module which implements seleniums AbstractEventListener"
     )
 
 
 def pytest_configure(config):
+    from pylenium.configuration.pylenium_config import PyleniumConfig
     _configure_metadata()
     py_config = PyleniumConfig()
 
@@ -326,8 +329,8 @@ def default_selector(request):
 
 
 @pytest.fixture
-def wrap_driver(request):
-    return request.config.getoption("wrap_driver")
+def driver_listener(request):
+    return request.config.getoption("driver_listener")
 
 
 @pytest.fixture
@@ -337,5 +340,5 @@ def pylenium_config(request):
 
 @pytest.fixture
 def driver(pylenium_config, request):
-    yield DriverFactory.get_webdriver(pylenium_config)
-    request.addfinalizer(DriverFactory.destroy)
+    yield ThreadLocalDriverManager().get_driver()
+    request.addfinalizer(ThreadLocalDriverManager.destroy)

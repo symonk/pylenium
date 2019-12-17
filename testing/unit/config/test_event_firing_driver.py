@@ -22,8 +22,8 @@
 def test_default(testdir):
     testdir.makepyfile(
         """
-        def test_default(wrap_driver):
-            assert not wrap_driver
+        def test_default(driver_listener):
+            assert not driver_listener
     """
     )
     result = testdir.runpytest("-v")
@@ -36,11 +36,11 @@ def test_default(testdir):
 def test_override(testdir):
     testdir.makepyfile(
         """
-        def test_override(wrap_driver):
-            assert wrap_driver
+        def test_override(driver_listener):
+            assert driver_listener == 'src/example/listenermodule.py'
     """
     )
-    result = testdir.runpytest("--no-wrap-driver", "-v")
+    result = testdir.runpytest("--driver-listener=src/example/listenermodule.py", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

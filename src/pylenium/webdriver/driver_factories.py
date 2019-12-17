@@ -15,82 +15,68 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import threading
 import logging
+from abc import ABC, abstractmethod
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.drivers.event_listener import PyleniumEventListener
 from pylenium.drivers.pylenium_driver import PyleniumDriver
-from pylenium.exceptions.exceptions import PyleniumArgumentException
-from pylenium.globals import FIREFOX, REMOTE, CHROME
 
 log = logging.getLogger('pylenium')
 
 
-class ChromeDriverFactory:
-    def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
+class AbstractDriverFactory(ABC):
+
+    @abstractmethod
+    def get_driver(self):
+        pass
+
+    @abstractmethod
+    def resolve_capabilities(self):
+        pass
+
+
+class ChromeDriverFactory(AbstractDriverFactory):
+
+    def resolve_capabilities(self) -> Options:
+        pylenium_chrome_opts = Options()
+        pylenium_chrome_opts.add_argument("--headless")
+        pylenium_chrome_opts.add_argument("--no-sandbox")
+        pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
+        return pylenium_chrome_opts
+
+    def get_driver(self):
+        config = PyleniumConfig()
         return PyleniumDriver(
             config,
-            webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options),
+            webdriver.Chrome(ChromeDriverManager().install(), options=self.resolve_capabilities(config)),
         )
 
 
-class FireFoxDriverFactory:
-    def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
+class FireFoxDriverFactory(AbstractDriverFactory):
+
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        config = PyleniumConfig()
         return PyleniumDriver(config, webdriver.Firefox(GeckoDriverManager().install()))
 
 
-class RemoteWebDriverFactory:
-    def __call__(self, config: PyleniumConfig) -> PyleniumDriver:
+class RemoteWebDriverFactory(AbstractDriverFactory):
+
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        config = PyleniumConfig()
         return PyleniumDriver(
             config,
             webdriver.Remote(
                 command_executor=f"{config.server}:{config.server_port}/wd/hub",
                 desired_capabilities=config.browser_capabilities
-            ),
-        )
-
-
-class DriverFactory:
-
-    thread_local_drivers = threading.local()
-    config = None
-
-    @classmethod
-    def get_webdriver(cls, config: PyleniumConfig = None) -> PyleniumDriver:
-        if hasattr(cls.thread_local_drivers, 'pydriver'):
-            log.info(f"Web driver already instantiated for this thread, returning it")
-            return cls.thread_local_drivers.pydriver
-
-        if cls.config is None and config:
-            cls.config = config
-
-        browser = cls.config.browser
-        is_remote = cls.config.remote
-        wrap_driver = cls.config.wrap_driver
-        if browser == CHROME:
-            driver = ChromeDriverFactory()(config)
-        elif browser == FIREFOX:
-            driver = FireFoxDriverFactory()(config)
-        elif browser == REMOTE or is_remote:
-            driver = RemoteWebDriverFactory()(config)
-        else:
-            raise PyleniumArgumentException()
-        cls.thread_local_drivers.pydriver = driver
-        return driver if not wrap_driver else EventFiringWebDriver(driver.wrapped_driver, PyleniumEventListener())
-
-    @classmethod
-    def destroy(cls):
-        if hasattr(cls.thread_local_drivers, 'pydriver'):
-            cls.thread_local_drivers.pydriver.quit()
-            del cls.thread_local_drivers.pydriver
+            ))

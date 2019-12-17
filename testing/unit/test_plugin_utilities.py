@@ -1,4 +1,4 @@
-from pylenium.globals import PYTEST_XDIST_WORKER
+from pylenium.string_globals import PYTEST_XDIST_WORKER
 from pylenium.plugin_util import is_master_process
 
 

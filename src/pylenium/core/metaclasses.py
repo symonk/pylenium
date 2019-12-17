@@ -15,15 +15,12 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from assertpy import assert_that
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-from pylenium.core.page_objects import Page
 
 
-class MyPage(Page):
-    pass
+class Singleton(type):
+    _instances = {}
 
-
-def test_page_object_driver():
-    assert_that(MyPage().driver.wrapped_driver).is_instance_of(WebDriver)
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
