@@ -22,8 +22,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
-
-from pylenium.configuration.pylenium_config import PyleniumConfig
+from pylenium import namespace
 from pylenium.drivers.pylenium_driver import PyleniumDriver
 
 log = logging.getLogger('pylenium')
@@ -50,10 +49,10 @@ class ChromeDriverFactory(AbstractDriverFactory):
         return pylenium_chrome_opts
 
     def get_driver(self):
-        config = PyleniumConfig()
+        config = namespace.config
         return PyleniumDriver(
             config,
-            webdriver.Chrome(ChromeDriverManager().install(), options=self.resolve_capabilities(config)),
+            webdriver.Chrome(ChromeDriverManager().install(), options=self.resolve_capabilities()),
         )
 
 
@@ -63,7 +62,7 @@ class FireFoxDriverFactory(AbstractDriverFactory):
         pass
 
     def get_driver(self):
-        config = PyleniumConfig()
+        config = namespace.config
         return PyleniumDriver(config, webdriver.Firefox(GeckoDriverManager().install()))
 
 
@@ -73,7 +72,7 @@ class RemoteWebDriverFactory(AbstractDriverFactory):
         pass
 
     def get_driver(self):
-        config = PyleniumConfig()
+        config = namespace.config
         return PyleniumDriver(
             config,
             webdriver.Remote(

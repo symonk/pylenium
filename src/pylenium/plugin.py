@@ -5,6 +5,8 @@ import yaml
 from yaml.parser import ParserError
 
 from pylenium import log
+from pylenium import namespace
+from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.drivers.driver_management import ThreadLocalDriverManager
 from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
@@ -198,7 +200,6 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
-    from pylenium.configuration.pylenium_config import PyleniumConfig
     _configure_metadata()
     py_config = PyleniumConfig()
 
@@ -206,6 +207,8 @@ def pytest_configure(config):
     if cap_file_path:
         py_config.browser_capabilities = _try_parse_capabilities_yaml(cap_file_path)
     config.pylenium_config = py_config
+    namespace.config = py_config
+    namespace.driver_manager = ThreadLocalDriverManager()
 
 
 def _configure_metadata():
@@ -340,5 +343,4 @@ def pylenium_config(request):
 
 @pytest.fixture
 def driver(pylenium_config, request):
-    yield ThreadLocalDriverManager().get_driver()
-    request.addfinalizer(ThreadLocalDriverManager.destroy)
+    yield namespace.driver_manager.get_driver()

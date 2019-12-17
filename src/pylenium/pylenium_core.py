@@ -17,7 +17,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from selenium.webdriver.common import by
 
-from pylenium.drivers.driver_management import ThreadLocalDriverManager
+from pylenium import namespace
 from pylenium.elements.pylenium_element import PyleniumElement
 
 
@@ -62,7 +62,7 @@ def find_all(locator):
 
 
 def get_web_driver():
-    return ThreadLocalDriverManager().get_driver()
+    return namespace.driver_manager.get_driver()
 
 
 def get_config():

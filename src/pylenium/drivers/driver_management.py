@@ -19,7 +19,6 @@ import threading
 import logging
 from functools import partial
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.core.metaclasses import Singleton
 from pylenium.drivers.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.string_globals import CHROME, FIREFOX, REMOTE
@@ -28,15 +27,15 @@ from pylenium.webdriver.driver_factories import ChromeDriverFactory, FireFoxDriv
 log = logging.getLogger('pylenium')
 
 
-class ThreadLocalDriverManager(metaclass=Singleton):
+class ThreadLocalDriverManager:
 
     def __init__(self):
         self.threaded_drivers = threading.local()
         self.threaded_drivers.drivers = {}
         self.config = PyleniumConfig()
-        self.supported_drivers = {CHROME: partial(ChromeDriverFactory.get_driver),
-                                  FIREFOX: partial(FireFoxDriverFactory.get_driver),
-                                  REMOTE: partial(RemoteWebDriverFactory.get_driver)}
+        self.supported_drivers = {CHROME: partial(ChromeDriverFactory().get_driver),
+                                  FIREFOX: partial(FireFoxDriverFactory().get_driver),
+                                  REMOTE: partial(RemoteWebDriverFactory().get_driver)}
 
     def get_driver(self):
         """
@@ -58,6 +57,5 @@ class ThreadLocalDriverManager(metaclass=Singleton):
         if runtime_browser not in self.supported_drivers:
             raise PyleniumArgumentException(f"Unsupported --browser option, selection was {runtime_browser}")
         else:
-            breakpoint()
             self.threaded_drivers.drivers[thread_id] = self.supported_drivers.get(runtime_browser)()
             return self.threaded_drivers.drivers.get(thread_id)
