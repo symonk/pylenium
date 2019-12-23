@@ -29,10 +29,10 @@ log = logging.getLogger('pylenium')
 
 class ThreadLocalDriverManager:
 
-    def __init__(self):
+    def __init__(self, config: PyleniumConfig):
         self.threaded_drivers = threading.local()
         self.threaded_drivers.drivers = {}
-        self.config = PyleniumConfig()
+        self.config = config
         self.supported_drivers = {CHROME: partial(ChromeDriverFactory().get_driver),
                                   FIREFOX: partial(FireFoxDriverFactory().get_driver),
                                   REMOTE: partial(RemoteWebDriverFactory().get_driver)}

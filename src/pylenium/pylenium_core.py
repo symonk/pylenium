@@ -16,9 +16,10 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from selenium.webdriver.common import by
-
-from pylenium import namespace
 from pylenium.elements.pylenium_element import PyleniumElement
+
+thread_local_drivers = None  # instantiated from the plugin!
+pylenium_config = None  # instantiated from the plugin!
 
 
 def id(value: str):
@@ -62,11 +63,11 @@ def find_all(locator):
 
 
 def get_web_driver():
-    return namespace.driver_manager.get_driver()
+    return thread_local_drivers.get_driver()
 
 
 def get_config():
-    pass
+    return pylenium_config
 
 
 def XPATH(selector) -> PyleniumElement:
