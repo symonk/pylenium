@@ -237,7 +237,6 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
-    _configure_metadata()
     _resolve_config_from_parseargs(config)
     _init_thread_local_drivers()
 
