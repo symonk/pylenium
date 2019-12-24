@@ -26,4 +26,4 @@ class MyPage(Page):
 
 
 def test_page_object_driver():
-    assert_that(MyPage().driver.wrapped_driver).is_instance_of(WebDriver)
+    assert_that(MyPage().browser.browser).is_instance_of(WebDriver)

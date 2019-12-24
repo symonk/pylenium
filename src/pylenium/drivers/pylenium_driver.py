@@ -23,11 +23,9 @@ from pylenium.webelements.pylenium_element import PyleniumElement
 
 
 class PyleniumDriver:
-    def __init__(self, config, driver_to_wrap):
+    def __init__(self, config, browser):
         self.config = config
-        self._browser = driver_to_wrap
-        self.wrapped_driver = driver_to_wrap
-        self.wrapped_driver._web_element_cls = PyleniumElement
+        self._browser = browser
         self.navigator = Navigator()
 
     @property
@@ -35,30 +33,29 @@ class PyleniumDriver:
         return self._browser
 
     @browser.setter
-    def browser(self, new_driver):
+    def browser(self, value):
         has_path = self.config.driver_listener_path
-        self.browser = (
-            new_driver if not has_path else EventFiringWebDriver(new_driver, has_path)
-        )
+        self.browser = value if not has_path else EventFiringWebDriver(value, has_path)
+        self._browser._web_element_cls = PyleniumElement
 
     def open(self, url):
-        return self.navigator.open(self.wrapped_driver, url)
+        return self.navigator.open(self.browser, url)
 
     def wait(self) -> PyleniumWait:
         return PyleniumWait(
-            self.wrapped_driver, self.config.explicit_wait, self.config.polling_interval
+            self.browser, self.config.explicit_wait, self.config.polling_interval
         )
 
     def quit(self):
-        self.wrapped_driver.close()
+        self.browser.close()
 
     def get(self, url: str):
-        self.wrapped_driver.get(url)
+        self.browser.get(url)
         return self
 
     @property
     def title(self):
-        return self.wrapped_driver.title
+        return self.browser.title
 
     def xpath(self, expression: str) -> PyleniumElement:
-        return self.wrapped_driver.find_element_by_xpath(expression)
+        return self.browser.find_element_by_xpath(expression)

@@ -285,7 +285,7 @@ def find_all(locator):
 
 
 def XPATH(selector) -> PyleniumElement:
-    return get_webdriver().wrapped_driver.find_element_by_xpath(selector)
+    return get_webdriver().browser.find_element_by_xpath(selector)
 
 
 @pytest.fixture

@@ -20,4 +20,4 @@ from pylenium import get_webdriver
 
 class Page:
     def __init__(self):
-        self.driver = get_webdriver()
+        self.browser = get_webdriver()
