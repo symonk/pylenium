@@ -1,18 +1,20 @@
 from __future__ import annotations
 
-import logging
-import sys
+import threading
+from abc import ABC, abstractmethod
+from functools import partial
 
 import pytest
-import yaml
-from yaml.parser import ParserError
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.drivers.driver_management import ThreadLocalDriverManager
-from pylenium.exceptions.exceptions import (
-    PyleniumCapabilitiesException,
-    PyleniumInvalidYamlException,
-)
+from pylenium.drivers.pylenium_driver import PyleniumDriver
+from pylenium.exceptions.exceptions import PyleniumArgumentException
+
+from pylenium.logging.log import log
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
 from pylenium.string_globals import (
@@ -21,19 +23,13 @@ from pylenium.string_globals import (
     EXEC_STARTED,
     RELEASE_INFO,
     GRATITUDE_MSG,
-    NO_CAP_FILE_FOUND_EXCEPTION,
-    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE,
+    REMOTE,
+    FIREFOX,
 )
 from pylenium.webelements.pylenium_element import PyleniumElement
 
-thread_local_drivers = ThreadLocalDriverManager()
+thread_local_drivers = None
 configuration = None
-log = logging.getLogger("Pylenium")
-log.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-log.addHandler(handler)
 
 
 def pytest_addoption(parser):
@@ -125,7 +121,6 @@ def pytest_addoption(parser):
     group.addoption(
         "--browser-capabilities-file",
         action="store",
-        default="",
         dest="browser_capabilities",
         help="Specify a python file which contains a dictionary outlining browser capabilities",
     )
@@ -160,7 +155,6 @@ def pytest_addoption(parser):
         "--page-source-on-fail",
         action="store_true",
         default=False,
-        type=bool,
         dest="store_page_source",
         help="Store page source HTML for each test in the event of failures",
     )
@@ -169,7 +163,6 @@ def pytest_addoption(parser):
         "--screenshot-on-fail",
         action="store_true",
         default=False,
-        type=bool,
         dest="store_screenshot",
         help="Store screenshot for each test in the event of failures",
     )
@@ -178,7 +171,6 @@ def pytest_addoption(parser):
         "--stack-trace-on-fail",
         action="store_true",
         default=False,
-        type=bool,
         dest="store_stack_trace",
         help="Store stack trace info for each test in the event of failures",
     )
@@ -186,7 +178,6 @@ def pytest_addoption(parser):
     group.addoption(
         "--click-with-js",
         action="store_true",
-        type=bool,
         default=False,
         dest="click_with_js",
         help="Attempt to do clicks using a javascript wraparound",
@@ -195,7 +186,6 @@ def pytest_addoption(parser):
     group.addoption(
         "--sendkeys-with-js",
         action="store_true",
-        type=bool,
         default=False,
         dest="sendkeys_with_js",
         help="Attempt to do sendkeys using a javascript wraparound",
@@ -215,11 +205,12 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         dest="driver_listener",
-        help="File path to your .py module which implements seleniums AbstractEventListener",
+        help="File path to your .py module which implements seleniums AbstractEventListener"
+             "n.b -> if passed; this will create an EventFiringWebDriver automatically",
     )
 
     group.addoption(
-        "--maximized",
+        "--browser-maximized",
         action="store_true",
         default=False,
         dest="browser_maximized",
@@ -230,11 +221,7 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     _configure_metadata()
     _resolve_config_from_parseargs(config)
-    _init_thread_local_drivers(config)
-
-    cap_file_path = config.getoption("browser_capabilities")
-    if cap_file_path:
-        configuration.browser_capabilities = _try_parse_capabilities_yaml(cap_file_path)
+    _init_thread_local_drivers()
 
 
 def _resolve_config_from_parseargs(config):
@@ -243,10 +230,10 @@ def _resolve_config_from_parseargs(config):
     :param config: the pytest test config object
     """
     global configuration
-    configuration = PyleniumConfig()
+    configuration = PyleniumConfig(config)
 
 
-def _init_thread_local_drivers(config):
+def _init_thread_local_drivers():
     global thread_local_drivers
     thread_local_drivers = ThreadLocalDriverManager(configuration)
 
@@ -258,17 +245,6 @@ def _configure_metadata():
     plugin_log_message(RELEASE_INFO)
     plugin_log_message(GRATITUDE_MSG)
     plugin_log_seperate()
-
-
-def _try_parse_capabilities_yaml(file_path) -> dict:
-    try:
-        with open(file_path, "r") as yaml_file:
-            parsed_yaml = yaml.safe_load(yaml_file)
-            return parsed_yaml["Capabilities"]
-    except FileNotFoundError:
-        raise PyleniumCapabilitiesException(NO_CAP_FILE_FOUND_EXCEPTION)
-    except ParserError:
-        raise PyleniumInvalidYamlException(CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE)
 
 
 def get_webdriver():
@@ -401,15 +377,106 @@ def driver_listener(request):
 
 
 @pytest.fixture
-def driver_maximized(request):
+def browser_maximized(request):
     return request.config.getoption("browser_maximized")
 
 
 @pytest.fixture
 def pylenium_config(request):
-    return request.config.pylenium_config
+    return configuration
 
 
 @pytest.fixture
 def driver(pylenium_config):
     yield get_webdriver()
+
+
+# Driver management
+class ThreadLocalDriverManager:
+    def __init__(self, config):
+        self.threaded_drivers = threading.local()
+        self.threaded_drivers.drivers = {}
+        self.config = config
+        self.supported_drivers = {
+            CHROME: partial(ChromeDriverFactory().get_driver),
+            FIREFOX: partial(FireFoxDriverFactory().get_driver),
+            REMOTE: partial(RemoteWebDriverFactory().get_driver),
+        }
+
+    def get_driver(self):
+        """
+        Spawns a new thread local driver or returns the already instantiated one if such a driver exists
+        for the given thread
+        :return: an instance of PyleniumDriver
+        """
+        driver = self._resolve_driver_from_config()
+        return driver
+
+    def _resolve_driver_from_config(self) -> PyleniumDriver:
+        thread_id = threading.get_ident()
+        driver = self.threaded_drivers.drivers.get(thread_id, None)
+        if driver:
+            return driver
+
+        runtime_browser = self.config.browser
+
+        if runtime_browser not in self.supported_drivers:
+            raise PyleniumArgumentException(
+                f"Unsupported --browser option, selection was {runtime_browser}"
+            )
+        else:
+            self.threaded_drivers.drivers[thread_id] = self.supported_drivers.get(
+                runtime_browser
+            )()
+            return self.threaded_drivers.drivers.get(thread_id)
+
+
+class AbstractDriverFactory(ABC):
+    @abstractmethod
+    def get_driver(self):
+        pass
+
+    @abstractmethod
+    def resolve_capabilities(self):
+        pass
+
+
+class ChromeDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pylenium_chrome_opts = Options()
+        pylenium_chrome_opts.add_argument("--headless")
+        pylenium_chrome_opts.add_argument("--no-sandbox")
+        pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
+        return pylenium_chrome_opts
+
+    def get_driver(self):
+        return PyleniumDriver(
+            pylenium_config,
+            webdriver.Chrome(
+                ChromeDriverManager().install(), options=self.resolve_capabilities()
+            ),
+        )
+
+
+class FireFoxDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        return PyleniumDriver(
+            pylenium_config, webdriver.Firefox(GeckoDriverManager().install())
+        )
+
+
+class RemoteWebDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        return PyleniumDriver(
+            pylenium_config,
+            webdriver.Remote(
+                command_executor=f"{pylenium_config.server}:{pylenium_config.server_port}/wd/hub",
+                desired_capabilities=pylenium_config.browser_capabilities,
+            ),
+        )

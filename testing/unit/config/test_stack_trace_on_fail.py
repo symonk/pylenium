@@ -38,7 +38,7 @@ def test_override(testdir):
             assert store_stack_trace_on_fail
     """
     )
-    result = testdir.runpytest("--stack-trace-on-fail=True", "-v")
+    result = testdir.runpytest("--stack-trace-on-fail", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

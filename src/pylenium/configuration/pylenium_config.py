@@ -1,16 +1,16 @@
 from dataclasses import dataclass
-from typing import Any
+from typing import Dict
 
-from pylenium.string_globals import LOCALHOST_URL, CHROME
+import yaml
+
+from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
+from pylenium.string_globals import LOCALHOST_URL, CHROME, NO_CAP_FILE_FOUND_EXCEPTION, \
+    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
+from yaml.parser import ParserError
 
 
 @dataclass
 class PageLoadingStrategy:
-    pass
-
-
-@dataclass
-class BrowserCapabilities:
     pass
 
 
@@ -52,61 +52,42 @@ class PyleniumConfig:
     """
 
     def __init__(self, config):
-        self.config = config
-        self.browser: str = self._resolve_pytest_config_option("browser") or CHROME
-        self.headless: bool = self._resolve_pytest_config_option("headless")
-        self.remote: bool = self._resolve_pytest_config_option("remote")
-        self.server: str = self._resolve_pytest_config_option("server") or LOCALHOST_URL
-        self.server_port: int = self._resolve_pytest_config_option(
-            "server_port"
-        ) or 4444
-        self.browser_resolution: str = self._resolve_pytest_config_option(
+        self.browser: str = config.getoption("browser") or CHROME
+        self.headless: bool = config.getoption("headless")
+        self.remote: bool = config.getoption("remote")
+        self.server: str = config.getoption("server") or LOCALHOST_URL
+        self.server_port: int = config.getoption("server_port") or 4444
+        self.browser_resolution: str = config.getoption(
             "browser_resolution"
         ) or "1366x768"
-        self.browser_version: str = self._resolve_pytest_config_option(
-            "browser_version"
-        ) or "latest"
-        self.browser_maximized: bool = self._resolve_pytest_config_option(
-            "browser_maximized"
-        )
-        self.aquire_binary: bool = self._resolve_pytest_config_option("acquire_binary")
-        self.driver_binary_path: str = self._resolve_pytest_config_option(
-            "driver_binary_path"
-        ) or None
-        self.page_load_strategy: PageLoadingStrategy = self._resolve_pytest_config_option(
+        self.browser_version: str = config.getoption("browser_version") or "latest"
+        self.browser_maximized: bool = config.getoption("browser_maximized")
+        self.aquire_binary: bool = config.getoption("acquire_binary")
+        self.driver_binary_path: str = config.getoption("driver_binary_path") or None
+        self.page_load_strategy: PageLoadingStrategy = config.getoption(
             "page_load_strategy"
         )
-        self.browser_capabilities: BrowserCapabilities = self._resolve_pytest_config_option(
-            "browser_capabilities"
-        )
-        self.load_base_url: bool = self._resolve_pytest_config_option("load_base_url")
-        self.base_url: ValidUrl = self._resolve_pytest_config_option("base_url")
-        self.explicit_wait: int = self._resolve_pytest_config_option("explicit_wait")
-        self.polling_interval: int = self._resolve_pytest_config_option(
-            "polling_interval"
-        )
-        self.screenshot_on_fail: bool = self._resolve_pytest_config_option(
-            "store_screenshot"
-        )
-        self.page_source_on_fail: bool = self._resolve_pytest_config_option(
-            "store_page_source"
-        )
-        self.stack_trace_on_fail: bool = self._resolve_pytest_config_option(
-            "store_stack_trace"
-        )
-        self.click_with_js: bool = self._resolve_pytest_config_option("click_with_js")
-        self.sendkeys_with_js: bool = self._resolve_pytest_config_option(
-            "sendkeys_with_js"
-        )
-        self.default_selector: str = self._resolve_pytest_config_option(
-            "default_selector"
-        )
-        self.wrap_driver: bool = self._resolve_pytest_config_option("wrap_driver")
-        self.driver_listener_path: str = self._resolve_pytest_config_option(
-            "driver_listener"
-        ) or None
+        self.browser_capabilities: Dict = self._try_parse_capabilities_yaml(config.getoption('browser_capabilities'))
+        self.base_url: ValidUrl = config.getoption("base_url") or None
+        self.explicit_wait: int = config.getoption("explicit_wait")
+        self.polling_interval: int = config.getoption("polling_interval")
+        self.screenshot_on_fail: bool = config.getoption("store_screenshot")
+        self.page_source_on_fail: bool = config.getoption("store_page_source")
+        self.stack_trace_on_fail: bool = config.getoption("store_stack_trace")
+        self.click_with_js: bool = config.getoption("click_with_js")
+        self.sendkeys_with_js: bool = config.getoption("sendkeys_with_js")
+        self.default_selector: str = config.getoption("default_selector")
+        self.driver_listener_path: str = config.getoption("driver_listener") or None
 
     @staticmethod
-    def _resolve_pytest_config_option(self, name: str) -> Any:
-        breakpoint()
-        print(1)
+    def _try_parse_capabilities_yaml(file_path) -> dict:
+        if file_path is None:
+            return {}
+        try:
+            with open(file_path, "r") as yaml_file:
+                parsed_yaml = yaml.safe_load(yaml_file)
+                return parsed_yaml["Capabilities"]
+        except FileNotFoundError:
+            raise PyleniumCapabilitiesException(NO_CAP_FILE_FOUND_EXCEPTION)
+        except ParserError:
+            raise PyleniumInvalidYamlException(CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE)

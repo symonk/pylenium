@@ -38,7 +38,7 @@ def test_override(testdir):
             assert store_screenshot_on_fail
     """
     )
-    result = testdir.runpytest("--screenshot-on-fail=True", "-v")
+    result = testdir.runpytest("--screenshot-on-fail", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

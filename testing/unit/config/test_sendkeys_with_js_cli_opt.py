@@ -38,7 +38,7 @@ def test_override(testdir):
             assert sendkeys_with_js
     """
     )
-    result = testdir.runpytest("--sendkeys-with-js=True", "-v")
+    result = testdir.runpytest("--sendkeys-with-js", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

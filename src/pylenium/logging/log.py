@@ -15,31 +15,12 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import logging
+import sys
 
-
-def test_default(testdir):
-    testdir.makepyfile(
-        """
-        def test_default(browser_maximized):
-            assert not browser_maximized
-    """
-    )
-    result = testdir.runpytest("-v")
-    result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*",]
-    )
-    assert result.ret == 0
-
-
-def test_override(testdir):
-    testdir.makepyfile(
-        """
-        def test_override(browser_maximized):
-            assert browser_maximized
-    """
-    )
-    result = testdir.runpytest("--browser-maximized", "-v")
-    result.stdout.fnmatch_lines(
-        ["*::test_override PASSED*",]
-    )
-    assert result.ret == 0
+log = logging.getLogger("Pylenium")
+log.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+log.addHandler(handler)

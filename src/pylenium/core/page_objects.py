@@ -15,9 +15,9 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from pylenium import pylenium_core
+from pylenium import get_webdriver
 
 
 class Page:
     def __init__(self):
-        self.driver = pylenium_core.get_web_driver()
+        self.driver = get_webdriver()

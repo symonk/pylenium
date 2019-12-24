@@ -38,7 +38,7 @@ def test_override(testdir):
             assert store_page_source_on_fail
     """
     )
-    result = testdir.runpytest("--page-source-on-fail=True", "-v")
+    result = testdir.runpytest("--page-source-on-fail", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )

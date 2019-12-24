@@ -38,7 +38,7 @@ def test_override(testdir):
             assert click_with_js
     """
     )
-    result = testdir.runpytest("--click-with-js=True", "-v")
+    result = testdir.runpytest("--click-with-js", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
     )
