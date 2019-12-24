@@ -4,3 +4,5 @@ ignore:
   - "**/string_globals.py"
   - "**/ascii.py"
   - "**/_version.py"
+  - "def pytest*"
+  - "import *"
