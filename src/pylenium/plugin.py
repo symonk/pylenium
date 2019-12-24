@@ -224,7 +224,7 @@ def pytest_addoption(parser):
         default=None,
         dest="driver_listener",
         help="File path to your .py module which implements seleniums AbstractEventListener"
-             "n.b -> if passed; this will create an EventFiringWebDriver automatically",
+        "n.b -> if passed; this will create an EventFiringWebDriver automatically",
     )
 
     group.addoption(
@@ -468,7 +468,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
 
     def get_driver(self):
         return PyleniumDriver(
-            pylenium_config,
+            configuration,
             webdriver.Chrome(
                 ChromeDriverManager().install(), options=self.resolve_capabilities()
             ),
@@ -481,7 +481,7 @@ class FireFoxDriverFactory(AbstractDriverFactory):
 
     def get_driver(self):
         return PyleniumDriver(
-            pylenium_config, webdriver.Firefox(GeckoDriverManager().install())
+            configuration, webdriver.Firefox(GeckoDriverManager().install())
         )
 
 
@@ -491,7 +491,7 @@ class RemoteWebDriverFactory(AbstractDriverFactory):
 
     def get_driver(self):
         return PyleniumDriver(
-            pylenium_config,
+            configuration,
             webdriver.Remote(
                 command_executor=f"{pylenium_config.server}:{pylenium_config.server_port}/wd/hub",
                 desired_capabilities=pylenium_config.browser_capabilities,

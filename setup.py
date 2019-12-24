@@ -35,5 +35,5 @@ setup(
         "Operating System :: OS Independent",
         "License :: OSI Approved :: Apache Software License",
     ],
-    entry_points={"pytest11": ["pylenium = pylenium.plugin", ], },
+    entry_points={"pytest11": ["pylenium = pylenium.plugin",],},
 )

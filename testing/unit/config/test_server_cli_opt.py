@@ -10,7 +10,7 @@ def test_default(testdir):
     )
     result = testdir.runpytest("-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
 
@@ -24,6 +24,6 @@ def test_server_override(testdir):
     )
     result = testdir.runpytest("--server=10.0.0.1", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_server_override PASSED*", ]
+        ["*::test_server_override PASSED*",]
     )
     assert result.ret == 0

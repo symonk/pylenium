@@ -32,7 +32,7 @@ def test_default(testdir):
     )
     result = testdir.runpytest("-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
 
@@ -56,7 +56,7 @@ def test_cap_file_dict(testdir):
     )
     result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_override PASSED*", ]
+        ["*::test_override PASSED*",]
     )
     assert result.ret == 0
 
@@ -75,7 +75,7 @@ def test_cannot_find_yaml_file(testdir):
     )
     result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stderr.fnmatch_lines(
-        ["*pylenium.exceptions.exceptions.PyleniumCapabilitiesException*", ]
+        ["*pylenium.exceptions.exceptions.PyleniumCapabilitiesException*",]
     )
     assert result.ret == 3
 
@@ -92,6 +92,6 @@ def test_yaml_bad_format(testdir):
     test_file = os.path.join(ROOT_DIR, "testing", "test_files", "bad_yaml_format.yaml")
     result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stderr.fnmatch_lines(
-        ["*pylenium.exceptions.exceptions.PyleniumInvalidYamlException*", ]
+        ["*pylenium.exceptions.exceptions.PyleniumInvalidYamlException*",]
     )
     assert result.ret == 3

@@ -15,6 +15,8 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
+
 from pylenium.core.navigator import Navigator
 from pylenium.waiting.pylenium_wait import PyleniumWait
 from pylenium.webelements.pylenium_element import PyleniumElement
@@ -23,9 +25,21 @@ from pylenium.webelements.pylenium_element import PyleniumElement
 class PyleniumDriver:
     def __init__(self, config, driver_to_wrap):
         self.config = config
+        self._browser = driver_to_wrap
         self.wrapped_driver = driver_to_wrap
         self.wrapped_driver._web_element_cls = PyleniumElement
         self.navigator = Navigator()
+
+    @property
+    def browser(self):
+        return self._browser
+
+    @browser.setter
+    def browser(self, new_driver):
+        has_path = self.config.driver_listener_path
+        self.browser = (
+            new_driver if not has_path else EventFiringWebDriver(new_driver, has_path)
+        )
 
     def open(self, url):
         return self.navigator.open(self.wrapped_driver, url)

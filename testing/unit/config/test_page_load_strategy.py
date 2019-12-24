@@ -29,7 +29,7 @@ def test_default(testdir):
     )
     result = testdir.runpytest("-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
 
@@ -43,7 +43,7 @@ def test_override_fast(testdir):
     )
     result = testdir.runpytest("--page-load-strategy=fast", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_override PASSED*", ]
+        ["*::test_override PASSED*",]
     )
     assert result.ret == 0
 
@@ -57,7 +57,7 @@ def test_override_slow(testdir):
     )
     result = testdir.runpytest("--page-load-strategy=slow", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_override PASSED*", ]
+        ["*::test_override PASSED*",]
     )
     assert result.ret == 0
 
@@ -71,7 +71,7 @@ def test_type_fast(testdir):
     )
     result = testdir.runpytest("--page-load-strategy=fast", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
 
@@ -85,7 +85,7 @@ def test_type_normal(testdir):
     )
     result = testdir.runpytest("-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
 
@@ -99,6 +99,6 @@ def test_type_slow(testdir):
     )
     result = testdir.runpytest("--page-load-strategy=slow", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*", ]
+        ["*::test_default PASSED*",]
     )
     assert result.ret == 0
