@@ -51,7 +51,9 @@ def test_cap_file_dict(testdir):
             assert pylenium_config.browser_capabilities['browserstack.chrome.driver'] == '2.43'
     """
     )
-    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'browser_stack_capabilities.yaml')
+    test_file = os.path.join(
+        ROOT_DIR, "testing", "test_files", "browser_stack_capabilities.yaml"
+    )
     result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_override PASSED*",]
@@ -68,10 +70,10 @@ def test_cannot_find_yaml_file(testdir):
                 pass
     """
     )
-    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'browser_stack_capabilities2.yaml')
-    result = testdir.runpytest(
-        f"--browser-capabilities-file={test_file}", "-v"
+    test_file = os.path.join(
+        ROOT_DIR, "testing", "test_files", "browser_stack_capabilities2.yaml"
     )
+    result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stderr.fnmatch_lines(
         ["*pylenium.exceptions.exceptions.PyleniumCapabilitiesException*",]
     )
@@ -87,10 +89,8 @@ def test_yaml_bad_format(testdir):
                 pass
     """
     )
-    test_file = os.path.join(ROOT_DIR, 'testing', 'test_files', 'bad_yaml_format.yaml')
-    result = testdir.runpytest(
-        f"--browser-capabilities-file={test_file}", "-v"
-    )
+    test_file = os.path.join(ROOT_DIR, "testing", "test_files", "bad_yaml_format.yaml")
+    result = testdir.runpytest(f"--browser-capabilities-file={test_file}", "-v")
     result.stderr.fnmatch_lines(
         ["*pylenium.exceptions.exceptions.PyleniumInvalidYamlException*",]
     )

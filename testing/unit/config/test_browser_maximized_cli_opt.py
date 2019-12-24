@@ -15,60 +15,31 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from selenium.webdriver.common import by
-from pylenium.elements.pylenium_element import PyleniumElement
-
-thread_local_drivers = None  # instantiated from the plugin!
-pylenium_config = None  # instantiated from the plugin!
 
 
-def id(value: str):
-    return by.ID(value)
+def test_default(testdir):
+    testdir.makepyfile(
+        """
+        def test_default(browser_maximized):
+            assert not browser_maximized
+    """
+    )
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
+    assert result.ret == 0
 
 
-def xpath(value: str):
-    return by.XPATH(value)
-
-
-def link_text(value: str):
-    return by.LINK_TEXT(value)
-
-
-def partial_link_text(value: str):
-    return by.PARTIAL_LINK_TEXT(value)
-
-
-def name(value: str):
-    return by.NAME(value)
-
-
-def tag_name(value: str):
-    return by.TAG_NAME(value)
-
-
-def class_name(value: str):
-    return by.CLASS_NAME(value)
-
-
-def css(value: str):
-    return by.CSS_SELECTOR(value)
-
-
-def find(locator):
-    pass
-
-
-def find_all(locator):
-    pass
-
-
-def get_web_driver():
-    return thread_local_drivers.get_driver()
-
-
-def get_config():
-    return pylenium_config
-
-
-def XPATH(selector) -> PyleniumElement:
-    return get_web_driver().wrapped_driver.find_element_by_xpath(selector)
+def test_override(testdir):
+    testdir.makepyfile(
+        """
+        def test_override(browser_maximized):
+            assert browser_maximized
+    """
+    )
+    result = testdir.runpytest("--browser_maximized", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_override PASSED*",]
+    )
+    assert result.ret == 0

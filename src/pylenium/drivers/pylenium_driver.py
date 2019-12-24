@@ -16,8 +16,8 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from pylenium.core.navigator import Navigator
-from pylenium.elements.pylenium_element import PyleniumElement
 from pylenium.waiting.pylenium_wait import PyleniumWait
+from pylenium.webelements.pylenium_element import PyleniumElement
 
 
 class PyleniumDriver:

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from pylenium.string_globals import LOCALHOST_URL, CHROME
 
@@ -18,7 +19,6 @@ class ValidUrl:
     pass
 
 
-@dataclass
 class PyleniumConfig:
     """
     Pyleniums core config, this is built as part of the plugins parse args
@@ -48,28 +48,65 @@ class PyleniumConfig:
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
         --no-wrap-driver: Should pylenium wrap the driver instance in our own EventFiringWebDriver
+        --driver-listener: The path to the .py module we should load your event firing webdriver listener from
     """
 
-    browser: str = CHROME
-    headless: bool = False
-    remote: bool = False
-    server: str = LOCALHOST_URL
-    server_port: int = 4444
-    browser_resolution: str = "1366x768"
-    browser_version: str = "latest"
-    browser_maximized: bool = True
-    aquire_binary: bool = True
-    driver_binary_path: str = None
-    page_load_strategy: PageLoadingStrategy = PageLoadingStrategy()
-    browser_capabilities: BrowserCapabilities = None
-    load_base_url: bool = False
-    base_url: ValidUrl = LOCALHOST_URL
-    explicit_wait: int = 15000
-    polling_interval: int = 200
-    screenshot_on_fail: bool = False
-    page_source_on_fail: bool = False
-    stack_trace_on_fail: bool = False
-    click_with_js: bool = False
-    sendkeys_with_js: bool = False
-    default_selector: str = "CSS"
-    wrap_driver: bool = True
+    def __init__(self, config):
+        self.config = config
+        self.browser: str = self._resolve_pytest_config_option("browser") or CHROME
+        self.headless: bool = self._resolve_pytest_config_option("headless")
+        self.remote: bool = self._resolve_pytest_config_option("remote")
+        self.server: str = self._resolve_pytest_config_option("server") or LOCALHOST_URL
+        self.server_port: int = self._resolve_pytest_config_option(
+            "server_port"
+        ) or 4444
+        self.browser_resolution: str = self._resolve_pytest_config_option(
+            "browser_resolution"
+        ) or "1366x768"
+        self.browser_version: str = self._resolve_pytest_config_option(
+            "browser_version"
+        ) or "latest"
+        self.browser_maximized: bool = self._resolve_pytest_config_option(
+            "browser_maximized"
+        )
+        self.aquire_binary: bool = self._resolve_pytest_config_option("acquire_binary")
+        self.driver_binary_path: str = self._resolve_pytest_config_option(
+            "driver_binary_path"
+        ) or None
+        self.page_load_strategy: PageLoadingStrategy = self._resolve_pytest_config_option(
+            "page_load_strategy"
+        )
+        self.browser_capabilities: BrowserCapabilities = self._resolve_pytest_config_option(
+            "browser_capabilities"
+        )
+        self.load_base_url: bool = self._resolve_pytest_config_option("load_base_url")
+        self.base_url: ValidUrl = self._resolve_pytest_config_option("base_url")
+        self.explicit_wait: int = self._resolve_pytest_config_option("explicit_wait")
+        self.polling_interval: int = self._resolve_pytest_config_option(
+            "polling_interval"
+        )
+        self.screenshot_on_fail: bool = self._resolve_pytest_config_option(
+            "store_screenshot"
+        )
+        self.page_source_on_fail: bool = self._resolve_pytest_config_option(
+            "store_page_source"
+        )
+        self.stack_trace_on_fail: bool = self._resolve_pytest_config_option(
+            "store_stack_trace"
+        )
+        self.click_with_js: bool = self._resolve_pytest_config_option("click_with_js")
+        self.sendkeys_with_js: bool = self._resolve_pytest_config_option(
+            "sendkeys_with_js"
+        )
+        self.default_selector: str = self._resolve_pytest_config_option(
+            "default_selector"
+        )
+        self.wrap_driver: bool = self._resolve_pytest_config_option("wrap_driver")
+        self.driver_listener_path: str = self._resolve_pytest_config_option(
+            "driver_listener"
+        ) or None
+
+    @staticmethod
+    def _resolve_pytest_config_option(self, name: str) -> Any:
+        breakpoint()
+        print(1)

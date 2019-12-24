@@ -15,27 +15,33 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from __future__ import annotations
 import threading
-import logging
 from functools import partial
+
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.drivers.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.string_globals import CHROME, FIREFOX, REMOTE
-from pylenium.webdriver.driver_factories import ChromeDriverFactory, FireFoxDriverFactory, RemoteWebDriverFactory
+from abc import ABC, abstractmethod
 
-log = logging.getLogger('pylenium')
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+from pylenium.drivers.pylenium_driver import PyleniumDriver
+from pylenium import get_configuration
 
 
 class ThreadLocalDriverManager:
-
     def __init__(self, config: PyleniumConfig):
         self.threaded_drivers = threading.local()
         self.threaded_drivers.drivers = {}
         self.config = config
-        self.supported_drivers = {CHROME: partial(ChromeDriverFactory().get_driver),
-                                  FIREFOX: partial(FireFoxDriverFactory().get_driver),
-                                  REMOTE: partial(RemoteWebDriverFactory().get_driver)}
+        self.supported_drivers = {
+            CHROME: partial(ChromeDriverFactory().get_driver),
+            FIREFOX: partial(FireFoxDriverFactory().get_driver),
+            REMOTE: partial(RemoteWebDriverFactory().get_driver),
+        }
 
     def get_driver(self):
         """
@@ -55,7 +61,63 @@ class ThreadLocalDriverManager:
         runtime_browser = self.config.browser
 
         if runtime_browser not in self.supported_drivers:
-            raise PyleniumArgumentException(f"Unsupported --browser option, selection was {runtime_browser}")
+            raise PyleniumArgumentException(
+                f"Unsupported --browser option, selection was {runtime_browser}"
+            )
         else:
-            self.threaded_drivers.drivers[thread_id] = self.supported_drivers.get(runtime_browser)()
+            self.threaded_drivers.drivers[thread_id] = self.supported_drivers.get(
+                runtime_browser
+            )()
             return self.threaded_drivers.drivers.get(thread_id)
+
+
+class AbstractDriverFactory(ABC):
+    @abstractmethod
+    def get_driver(self):
+        pass
+
+    @abstractmethod
+    def resolve_capabilities(self):
+        pass
+
+
+class ChromeDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pylenium_chrome_opts = Options()
+        pylenium_chrome_opts.add_argument("--headless")
+        pylenium_chrome_opts.add_argument("--no-sandbox")
+        pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
+        return pylenium_chrome_opts
+
+    def get_driver(self):
+        return PyleniumDriver(
+            get_configuration(),
+            webdriver.Chrome(
+                ChromeDriverManager().install(), options=self.resolve_capabilities()
+            ),
+        )
+
+
+class FireFoxDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        return PyleniumDriver(
+            get_configuration(), webdriver.Firefox(GeckoDriverManager().install())
+        )
+
+
+class RemoteWebDriverFactory(AbstractDriverFactory):
+    def resolve_capabilities(self) -> Options:
+        pass
+
+    def get_driver(self):
+        config = (get_configuration(),)
+        return PyleniumDriver(
+            config,
+            webdriver.Remote(
+                command_executor=f"{config.server}:{config.server_port}/wd/hub",
+                desired_capabilities=config.browser_capabilities,
+            ),
+        )

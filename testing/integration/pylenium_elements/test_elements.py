@@ -16,11 +16,13 @@
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from assertpy import assert_that
-
-from pylenium.elements.pylenium_element import PyleniumElement
 from pylenium.pylenium_core import XPATH
+
+from pylenium.webelements.pylenium_element import PyleniumElement
 
 
 def test_element_type(driver):
     driver.get("http://localhost:1337")
-    assert_that(XPATH("//a[text() = 'start_page.html']")).is_instance_of(PyleniumElement)
+    assert_that(XPATH("//a[text() = 'start_page.html']")).is_instance_of(
+        PyleniumElement
+    )

@@ -1,18 +1,39 @@
 from __future__ import annotations
 
+import logging
+import sys
+
 import pytest
 import yaml
 from yaml.parser import ParserError
 
-from pylenium import log, pylenium_core
 from pylenium.configuration.pylenium_config import PyleniumConfig
 from pylenium.drivers.driver_management import ThreadLocalDriverManager
-from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
+from pylenium.exceptions.exceptions import (
+    PyleniumCapabilitiesException,
+    PyleniumInvalidYamlException,
+)
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
-from pylenium.string_globals import PYLENIUM, CHROME, EXEC_STARTED, RELEASE_INFO, GRATITUDE_MSG, \
-    NO_CAP_FILE_FOUND_EXCEPTION, \
-    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
+from pylenium.string_globals import (
+    PYLENIUM,
+    CHROME,
+    EXEC_STARTED,
+    RELEASE_INFO,
+    GRATITUDE_MSG,
+    NO_CAP_FILE_FOUND_EXCEPTION,
+    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE,
+)
+from pylenium.webelements.pylenium_element import PyleniumElement
+
+thread_local_drivers = ThreadLocalDriverManager()
+configuration = None
+log = logging.getLogger("Pylenium")
+log.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+log.addHandler(handler)
 
 
 def pytest_addoption(parser):
@@ -137,7 +158,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         "--page-source-on-fail",
-        action="store",
+        action="store_true",
         default=False,
         type=bool,
         dest="store_page_source",
@@ -146,7 +167,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         "--screenshot-on-fail",
-        action="store",
+        action="store_true",
         default=False,
         type=bool,
         dest="store_screenshot",
@@ -155,7 +176,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         "--stack-trace-on-fail",
-        action="store",
+        action="store_true",
         default=False,
         type=bool,
         dest="store_stack_trace",
@@ -164,7 +185,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         "--click-with-js",
-        action="store",
+        action="store_true",
         type=bool,
         default=False,
         dest="click_with_js",
@@ -173,7 +194,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         "--sendkeys-with-js",
-        action="store",
+        action="store_true",
         type=bool,
         default=False,
         dest="sendkeys_with_js",
@@ -194,21 +215,40 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         dest="driver_listener",
-        help="File path to your .py module which implements seleniums AbstractEventListener"
+        help="File path to your .py module which implements seleniums AbstractEventListener",
+    )
+
+    group.addoption(
+        "--maximized",
+        action="store_true",
+        default=False,
+        dest="browser_maximized",
+        help="Should pylenium maximize the browser when it is instantiated",
     )
 
 
 def pytest_configure(config):
     _configure_metadata()
-    py_config = PyleniumConfig()
+    _resolve_config_from_parseargs(config)
+    _init_thread_local_drivers(config)
 
-    cap_file_path = config.getoption('browser_capabilities')
+    cap_file_path = config.getoption("browser_capabilities")
     if cap_file_path:
-        py_config.browser_capabilities = _try_parse_capabilities_yaml(cap_file_path)
+        configuration.browser_capabilities = _try_parse_capabilities_yaml(cap_file_path)
 
-    pylenium_core.thread_local_drivers = ThreadLocalDriverManager(py_config)
-    pylenium_core.pylenium_config = py_config
-    config.pylenium_config = py_config
+
+def _resolve_config_from_parseargs(config):
+    """
+    Prepares the globally instantiated pylenium config after parsing command line arguments
+    :param config: the pytest test config object
+    """
+    global configuration
+    configuration = PyleniumConfig()
+
+
+def _init_thread_local_drivers(config):
+    global thread_local_drivers
+    thread_local_drivers = ThreadLocalDriverManager(configuration)
 
 
 def _configure_metadata():
@@ -222,13 +262,37 @@ def _configure_metadata():
 
 def _try_parse_capabilities_yaml(file_path) -> dict:
     try:
-        with open(file_path, 'r') as yaml_file:
+        with open(file_path, "r") as yaml_file:
             parsed_yaml = yaml.safe_load(yaml_file)
-            return parsed_yaml['Capabilities']
+            return parsed_yaml["Capabilities"]
     except FileNotFoundError:
         raise PyleniumCapabilitiesException(NO_CAP_FILE_FOUND_EXCEPTION)
     except ParserError:
         raise PyleniumInvalidYamlException(CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE)
+
+
+def get_webdriver():
+    """
+    Pyleniums bread and butter, creates a fresh driver for every new thread or returns the driver coupled to the
+    thread which asked for one, if no driver exist for that thread we will use the pylenium config to create one
+    """
+    return thread_local_drivers.get_driver()
+
+
+def get_configuration():
+    return configuration
+
+
+def find(locator):
+    pass
+
+
+def find_all(locator):
+    pass
+
+
+def XPATH(selector) -> PyleniumElement:
+    return get_webdriver().wrapped_driver.find_element_by_xpath(selector)
 
 
 @pytest.fixture
@@ -337,10 +401,15 @@ def driver_listener(request):
 
 
 @pytest.fixture
+def driver_maximized(request):
+    return request.config.getoption("browser_maximized")
+
+
+@pytest.fixture
 def pylenium_config(request):
     return request.config.pylenium_config
 
 
 @pytest.fixture
 def driver(pylenium_config):
-    yield pylenium_core.get_web_driver()
+    yield get_webdriver()

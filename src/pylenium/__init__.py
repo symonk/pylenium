@@ -1,13 +1,5 @@
-import logging
-import sys
-
 from . import _version as __version__
+from .plugin import get_webdriver, get_configuration, log
 
-__all__ = ["__version__"]
 
-log = logging.getLogger("Pylenium")
-log.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-log.addHandler(handler)
+__all__ = ["__version__", "log", "get_webdriver", "get_configuration"]
