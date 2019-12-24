@@ -108,7 +108,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--driver-binary-path",
         action="store",
-        default="",
+        default=None,
         dest="driver_binary_path",
         help="If not using acquire binary, set the directory pylenium should look for the driver bianary",
     )
