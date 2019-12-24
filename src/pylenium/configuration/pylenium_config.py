@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Type
 
 import yaml
 
@@ -64,7 +64,7 @@ class PyleniumConfig:
         self.browser_maximized: bool = config.getoption("browser_maximized")
         self.aquire_binary: bool = config.getoption("acquire_binary")
         self.driver_binary_path: str = config.getoption("driver_binary_path") or None
-        self.page_load_strategy: PageLoadingStrategy = config.getoption(
+        self.page_load_strategy: Type[PageLoadingStrategy] = config.getoption(
             "page_load_strategy"
         )
         self.browser_capabilities: Dict = self._try_parse_capabilities_yaml(config.getoption('browser_capabilities'))

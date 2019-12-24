@@ -24,7 +24,7 @@ def test_default(testdir):
     testdir.makepyfile(
         """
         def test_default(page_load_strategy):
-            assert page_load_strategy == "normal"
+            assert page_load_strategy.name == "normal"
     """
     )
     result = testdir.runpytest("-v")
@@ -38,7 +38,7 @@ def test_override_fast(testdir):
     testdir.makepyfile(
         """
         def test_override(page_load_strategy):
-            assert page_load_strategy == "fast"
+            assert page_load_strategy.name == "fast"
     """
     )
     result = testdir.runpytest("--page-load-strategy=fast", "-v")
@@ -52,7 +52,7 @@ def test_override_slow(testdir):
     testdir.makepyfile(
         """
         def test_override(page_load_strategy):
-            assert page_load_strategy == "slow"
+            assert page_load_strategy.name == "slow"
     """
     )
     result = testdir.runpytest("--page-load-strategy=slow", "-v")
@@ -62,17 +62,43 @@ def test_override_slow(testdir):
     assert result.ret == 0
 
 
-def test_override_unsupported(testdir):
+def test_type_fast(testdir):
     testdir.makepyfile(
         """
-        def test_override(page_load_strategy):
-            pass
+        def test_default(page_load_strategy):
+            assert page_load_strategy.name == 'fast'
     """
     )
-    result = testdir.runpytest("--page-load-strategy=notallowed", "-v")
-    result.stderr.fnmatch_lines(
-        [
-            "*--page-load-strategy: invalid choice: 'notallowed' (choose from 'slow', 'normal', 'fast')*"
-        ]
+    result = testdir.runpytest("--page-load-strategy=fast", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
     )
-    assert result.ret == 4
+    assert result.ret == 0
+
+
+def test_type_normal(testdir):
+    testdir.makepyfile(
+        """
+        def test_default(page_load_strategy):
+            assert page_load_strategy.name == 'normal'
+    """
+    )
+    result = testdir.runpytest("-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
+    assert result.ret == 0
+
+
+def test_type_slow(testdir):
+    testdir.makepyfile(
+        """      
+        def test_default(page_load_strategy):
+            assert page_load_strategy.name == 'slow'
+    """
+    )
+    result = testdir.runpytest("--page-load-strategy=slow", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
+    assert result.ret == 0

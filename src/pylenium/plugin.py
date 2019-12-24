@@ -3,6 +3,7 @@ from __future__ import annotations
 import threading
 from abc import ABC, abstractmethod
 from functools import partial
+from typing import Type
 
 import pytest
 from selenium import webdriver
@@ -17,6 +18,8 @@ from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.logging.log import log
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
+from pylenium.strategies.page_loading_strategy import SlowLoadingPageStrategy, FastLoadingPageStrategy, \
+    NormalLoadingPageStrategy, strategy_union
 from pylenium.string_globals import (
     PYLENIUM,
     CHROME,
@@ -109,12 +112,18 @@ def pytest_addoption(parser):
         help="If not using acquire binary, set the directory pylenium should look for the driver bianary",
     )
 
+    strategies = {'slow': SlowLoadingPageStrategy, 'normal': NormalLoadingPageStrategy, 'fast': FastLoadingPageStrategy}
+
+    def _resolve_strategy(choice: str):
+        return strategies.get(choice, NormalLoadingPageStrategy())
+
     group.addoption(
         "--page-load-strategy",
         action="store",
         default="normal",
+        type=_resolve_strategy,
         dest="page_load_strategy",
-        choices=["slow", "normal", "fast"],
+        choices=[SlowLoadingPageStrategy, NormalLoadingPageStrategy, FastLoadingPageStrategy],
         help="Specify the page loading strategy",
     )
 
