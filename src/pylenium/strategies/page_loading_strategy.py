@@ -26,28 +26,28 @@ class PageLoadingStrategy:
 
 @dataclass(frozen=True, eq=True)
 class SlowLoadingPageStrategy(PageLoadingStrategy):
-    name: str = 'slow'
+    name: str = "slow"
 
     def __str__(self):
-        return 'strategy: slow'
+        return "strategy: slow"
 
 
 @dataclass(frozen=True, eq=True)
 class NormalLoadingPageStrategy(PageLoadingStrategy):
-    name: str = 'normal'
+    name: str = "normal"
 
     def __str__(self):
-        return 'strategy: normal'
+        return "strategy: normal"
 
 
 @dataclass(frozen=True, eq=True)
 class FastLoadingPageStrategy(PageLoadingStrategy):
-    name: str = 'fast'
+    name: str = "fast"
 
     def __str__(self):
-        return 'strategy: fast'
+        return "strategy: fast"
 
 
-strategy_union = Union[SlowLoadingPageStrategy, NormalLoadingPageStrategy, FastLoadingPageStrategy]
-
-
+strategy_union = Union[
+    SlowLoadingPageStrategy, NormalLoadingPageStrategy, FastLoadingPageStrategy
+]

@@ -28,7 +28,7 @@ def test_default(testdir):
     )
     result = testdir.runpytest("-v")
     result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*",]
+        ["*::test_default PASSED*", ]
     )
     assert result.ret == 0
 
@@ -42,6 +42,6 @@ def test_override(testdir):
     )
     result = testdir.runpytest("--acquire-binary", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_override PASSED*",]
+        ["*::test_override PASSED*", ]
     )
     assert result.ret == 0

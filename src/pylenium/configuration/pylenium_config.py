@@ -2,11 +2,18 @@ from dataclasses import dataclass
 from typing import Dict, Type
 
 import yaml
-
-from pylenium.exceptions.exceptions import PyleniumCapabilitiesException, PyleniumInvalidYamlException
-from pylenium.string_globals import LOCALHOST_URL, CHROME, NO_CAP_FILE_FOUND_EXCEPTION, \
-    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE
 from yaml.parser import ParserError
+
+from pylenium.exceptions.exceptions import (
+    PyleniumCapabilitiesException,
+    PyleniumInvalidYamlException,
+)
+from pylenium.string_globals import (
+    LOCALHOST_URL,
+    CHROME,
+    NO_CAP_FILE_FOUND_EXCEPTION,
+    CAP_FILE_YAML_FORMAT_NOT_ACCEPTABLE,
+)
 
 
 @dataclass
@@ -67,7 +74,9 @@ class PyleniumConfig:
         self.page_load_strategy: Type[PageLoadingStrategy] = config.getoption(
             "page_load_strategy"
         )
-        self.browser_capabilities: Dict = self._try_parse_capabilities_yaml(config.getoption('browser_capabilities'))
+        self.browser_capabilities: Dict = self._try_parse_capabilities_yaml(
+            config.getoption("browser_capabilities")
+        )
         self.base_url: ValidUrl = config.getoption("base_url") or None
         self.explicit_wait: int = config.getoption("explicit_wait")
         self.polling_interval: int = config.getoption("polling_interval")
