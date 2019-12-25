@@ -104,6 +104,7 @@ wrap the driver successfully you should implement the following two goals
 
     - Subclass seleniums AbstractEventListener and implement your desired behaviour
     - Provide a --driver-listener=path/to/your/py/file/containing/the/subclass
+    - n.b your subclass MUST be called PyleniumEventListener due to limitations of the run_py module (very important)
     
 An example of how to subclass and pass a py module to pylenium is outlined below:
 

@@ -18,6 +18,9 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import os
+
+from __project_root__ import ROOT_DIR
 
 
 def test_default(testdir):
@@ -42,7 +45,8 @@ def test_eventfiring_driver(testdir):
             assert type(driver.browser) == EventFiringWebDriver
     """
     )
-    result = testdir.runpytest("--driver-listener=src/example/listenermodule.py", "-v")
+    listener_module = os.path.join(ROOT_DIR, "testing", "test_files", "event_listener.py")
+    result = testdir.runpytest(f"--driver-listener={listener_module}", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_default PASSED*",]
     )

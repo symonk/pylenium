@@ -18,9 +18,10 @@
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
 from pylenium.core.navigator import Navigator
+from pylenium.exceptions.exceptions import PyleniumEventFiringWrapperException
 from pylenium.waiting.pylenium_wait import PyleniumWait
-from pylenium.webdriver.event_listener import PyleniumEventListener
 from pylenium.webelements.pylenium_element import PyleniumElement
+from runpy import run_path
 
 
 class PyleniumDriver:
@@ -36,8 +37,8 @@ class PyleniumDriver:
 
     @browser.setter
     def browser(self, value):
-        has_path = self.config.driver_listener
-        self._browser = value if not has_path else EventFiringWebDriver(value, PyleniumEventListener())
+        path = self.config.driver_listener
+        self._browser = value if not path else EventFiringWebDriver(value, get_instance_of_listener_from_path(path))
 
     def open(self, url):
         return self.navigator.open(self.browser, url)
@@ -60,3 +61,11 @@ class PyleniumDriver:
 
     def xpath(self, expression: str) -> PyleniumElement:
         return self.browser.find_element_by_xpath(expression)
+
+
+def get_instance_of_listener_from_path(module_file_path):
+    try:
+        event_listener_module = run_path(module_file_path)
+        return event_listener_module['PyleniumEventListener']()
+    except FileNotFoundError:
+        raise PyleniumEventFiringWrapperException('--driver-listener= path was not found, is it correct?')

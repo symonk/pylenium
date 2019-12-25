@@ -63,3 +63,7 @@ class PyleniumCapabilitiesException(Exception):
 
 class PyleniumInvalidYamlException(Exception):
     pass
+
+
+class PyleniumEventFiringWrapperException(Exception):
+    pass
