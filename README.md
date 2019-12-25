@@ -112,9 +112,11 @@ An example of how to subclass and pass a py module to pylenium is outlined below
 class PyleniumEventListener(AbstractEventListener):
     def before_navigate_to(self, url, driver):
         print("Navigating to!")
-        
-pytest --driver-listener=path/to/module.py
+ 
+```        
 
+```bash
+pytest --driver-listener=path/to/module.py
 ```
 
 ---
