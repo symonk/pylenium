@@ -49,7 +49,6 @@ Other examples
 ---
 ```python
 def test_no_driver():   
-    webelements
     open("https://www.google.com")
     element = find("#some_locator") # default configurable through the plugin --default-locator
     another_element = XPATH("//*[@class='cool']")
@@ -68,7 +67,6 @@ def test_no_driver():
 Easy, hassle free, abstracted -> Exactly how page objects should be!
 
 ```python
-    webelements
     # pages are not necessary, but recommended! (@see: our page objectless example code!)
     # pyleniums own web element is very smart and handles waiting to increase stability
     @loadable(page='/login.php')
