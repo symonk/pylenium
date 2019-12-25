@@ -88,6 +88,7 @@ Easy, hassle free, abstracted -> Exactly how page objects should be!
 Pylenium exposes a ton of helpful fixtures for your tests, these are outlined below including their scopes and autouse
 declarations.
 
+
 ```python
 import pylenium
 
@@ -95,6 +96,27 @@ def test_something_cool(driver):
     driver.open("https://www.google.com")
 ```
     
+---
+
+### Support for EventFiringWebDriver :star:
+Pylenium supports an event firing webdriver for advanced logging and listener capabilities.  In order for pylenium to 
+wrap the driver successfully you should implement the following two goals
+
+    - Subclass seleniums AbstractEventListener and implement your desired behaviour
+    - Provide a --driver-listener=path/to/your/py/file/containing/the/subclass
+    
+An example of how to subclass and pass a py module to pylenium is outlined below:
+
+```python
+# module.py file living in /path/to/
+class PyleniumEventListener(AbstractEventListener):
+    def before_navigate_to(self, url, driver):
+        print("Navigating to!")
+        
+pytest --driver-listener=path/to/module.py
+
+```
+
 ---
 
 ### Pylenium Desired Capabilities :star:

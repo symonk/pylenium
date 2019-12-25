@@ -399,7 +399,7 @@ def browser_maximized(request):
 
 
 @pytest.fixture
-def pylenium_config(request):
+def pylenium_config():
     return configuration
 
 
