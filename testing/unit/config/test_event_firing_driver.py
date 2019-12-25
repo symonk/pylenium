@@ -34,7 +34,7 @@ def test_default(testdir):
     assert result.ret == 0
 
 
-def broken_ef_driver(testdir):
+def test_eventfiring_driver(testdir):
     testdir.makepyfile(
         """
         def test_default(driver):
