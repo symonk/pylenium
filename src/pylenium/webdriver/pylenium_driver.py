@@ -26,6 +26,7 @@ class PyleniumDriver:
     def __init__(self, config, browser):
         self.config = config
         self._browser = browser
+        self._browser._web_element_cls = PyleniumElement
         self.navigator = Navigator()
 
     @property
@@ -34,9 +35,10 @@ class PyleniumDriver:
 
     @browser.setter
     def browser(self, value):
-        has_path = self.config.driver_listener_path
-        self.browser = value if not has_path else EventFiringWebDriver(value, has_path)
-        self._browser._web_element_cls = PyleniumElement
+        print('checking browser setter')
+        print(f"listener: {self.config.driver_listener}")
+        has_path = self.config.driver_listener
+        self._browser = value if not has_path else EventFiringWebDriver(value, has_path)
 
     def open(self, url):
         return self.navigator.open(self.browser, url)

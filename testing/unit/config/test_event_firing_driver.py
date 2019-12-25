@@ -34,6 +34,21 @@ def test_default(testdir):
     assert result.ret == 0
 
 
+def broken_ef_driver(testdir):
+    testdir.makepyfile(
+        """
+        def test_default(driver):
+            from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
+            assert type(driver.browser) == EventFiringWebDriver
+    """
+    )
+    result = testdir.runpytest("--driver-listener=src/example/listenermodule.py", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_default PASSED*",]
+    )
+    assert result.ret == 0
+
+
 def test_override(testdir):
     testdir.makepyfile(
         """

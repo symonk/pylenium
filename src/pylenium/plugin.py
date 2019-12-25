@@ -11,7 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.drivers.pylenium_driver import PyleniumDriver
+from pylenium.webdriver.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.logging.log import log
 from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
@@ -148,7 +148,7 @@ def pytest_addoption(parser):
         action="store",
         dest="base_url",
         default="http://localhost:8080",
-        help="Specify a base url to launch when any drivers are instantiated",
+        help="Specify a base url to launch when any webdriver are instantiated",
     )
 
     group.addoption(
@@ -405,7 +405,17 @@ def pylenium_config(request):
 
 @pytest.fixture
 def driver(pylenium_config):
-    yield get_webdriver()
+    driver = get_webdriver()
+    yield driver
+
+
+@pytest.fixture(autouse=True)
+def destroy_drivers(request):
+    def finalizer():
+        for driver in thread_local_drivers.threaded_drivers.drivers.values():
+            driver.quit()
+        thread_local_drivers.threaded_drivers.drivers.pop(threading.get_ident(), None)
+    request.addfinalizer(finalizer)
 
 
 # Driver management
@@ -437,7 +447,7 @@ class ThreadLocalDriverManager:
 
         runtime_browser = self.config.browser
 
-        if runtime_browser not in self.supported_drivers:
+        if runtime_browser not in self.supported_drivers.keys():
             raise PyleniumArgumentException(
                 f"Unsupported --browser option, selection was {runtime_browser}"
             )
@@ -461,7 +471,7 @@ class AbstractDriverFactory(ABC):
 class ChromeDriverFactory(AbstractDriverFactory):
     def resolve_capabilities(self) -> Options:
         pylenium_chrome_opts = Options()
-        pylenium_chrome_opts.add_argument("--headless")
+        pylenium_chrome_opts.add_argument('--headless')
         pylenium_chrome_opts.add_argument("--no-sandbox")
         pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
         return pylenium_chrome_opts

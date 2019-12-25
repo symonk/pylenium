@@ -70,14 +70,14 @@ class PyleniumConfig:
         self.browser_version: str = config.getoption("browser_version") or "latest"
         self.browser_maximized: bool = config.getoption("browser_maximized")
         self.aquire_binary: bool = config.getoption("acquire_binary")
-        self.driver_binary_path: str = config.getoption("driver_binary_path") or None
+        self.driver_binary_path: str = config.getoption("driver_binary_path")
         self.page_load_strategy: Type[PageLoadingStrategy] = config.getoption(
             "page_load_strategy"
         )
         self.browser_capabilities: Dict = self._try_parse_capabilities_yaml(
             config.getoption("browser_capabilities")
         )
-        self.base_url: ValidUrl = config.getoption("base_url") or None
+        self.base_url: ValidUrl = config.getoption("base_url")
         self.explicit_wait: int = config.getoption("explicit_wait")
         self.polling_interval: int = config.getoption("polling_interval")
         self.screenshot_on_fail: bool = config.getoption("store_screenshot")
@@ -86,7 +86,7 @@ class PyleniumConfig:
         self.click_with_js: bool = config.getoption("click_with_js")
         self.sendkeys_with_js: bool = config.getoption("sendkeys_with_js")
         self.default_selector: str = config.getoption("default_selector")
-        self.driver_listener_path: str = config.getoption("driver_listener") or None
+        self.driver_listener: str = config.getoption("driver_listener")
 
     @staticmethod
     def _try_parse_capabilities_yaml(file_path) -> dict:
