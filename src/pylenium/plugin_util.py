@@ -21,3 +21,13 @@ def plugin_log_seperate(number_of_stars: int = 30):
 
 def plugin_log_message(message: str):
     log.info(message)
+
+
+def is_a_file(file_path: str) -> bool:
+    """
+    Simple check on a given file path to see if it is a valid file
+    useful to avoid FileNotFoundErrors etc
+    :param file_path: the file path on the system to look for the file
+    :return: True if the file does exist
+    """
+    return os.path.exists(file_path)

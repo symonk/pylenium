@@ -415,6 +415,7 @@ def destroy_drivers(request):
         for driver in thread_local_drivers.threaded_drivers.drivers.values():
             driver.quit()
         thread_local_drivers.threaded_drivers.drivers.pop(threading.get_ident(), None)
+
     request.addfinalizer(finalizer)
 
 
@@ -471,7 +472,7 @@ class AbstractDriverFactory(ABC):
 class ChromeDriverFactory(AbstractDriverFactory):
     def resolve_capabilities(self) -> Options:
         pylenium_chrome_opts = Options()
-        pylenium_chrome_opts.add_argument('--headless')
+        pylenium_chrome_opts.add_argument("--headless")
         pylenium_chrome_opts.add_argument("--no-sandbox")
         pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
         return pylenium_chrome_opts

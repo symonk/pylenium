@@ -18,11 +18,17 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import os
-
-from __project_root__ import ROOT_DIR
 
 
+#  MIT License
+#
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+#  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+#  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+#  and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+#
 def test_default(testdir):
     testdir.makepyfile(
         """
@@ -31,22 +37,6 @@ def test_default(testdir):
     """
     )
     result = testdir.runpytest("-v")
-    result.stdout.fnmatch_lines(
-        ["*::test_default PASSED*",]
-    )
-    assert result.ret == 0
-
-
-def test_eventfiring_driver(testdir):
-    testdir.makepyfile(
-        """
-        def test_default(driver):
-            from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
-            assert type(driver.browser) == EventFiringWebDriver
-    """
-    )
-    listener_module = os.path.join(ROOT_DIR, "testing", "test_files", "event_listener.py")
-    result = testdir.runpytest(f"--driver-listener={listener_module}", "-v")
     result.stdout.fnmatch_lines(
         ["*::test_default PASSED*",]
     )
@@ -67,17 +57,19 @@ def test_override(testdir):
     assert result.ret == 0
 
 
-def fix_this(testdir):
+def test_event_firing_driver(testdir):
+
     testdir.makepyfile(
         """
         def test_file_not_found_override(driver):
             from pylenium.exceptions.exceptions import PyleniumEventFiringWrapperException
-            with pytest.raises(PyleniumEventFiringWrapperException):
+            with pytest.raises(PyleniumEventFiringWrapperException) as exc_info:
                 pass
     """
     )
+
     result = testdir.runpytest(f"--driver-listener=/made/up/path", "-v")
     result.stdout.fnmatch_lines(
-        ["*::test_file_not_found_override FAILED*",]
+        ["*pylenium.exceptions.exceptions.PyleniumEventFiringWrapperException*",]
     )
-    assert result.ret == 4
+    assert result.ret == 1
