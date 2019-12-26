@@ -17,9 +17,10 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-class Navigator:
-    def open(self, driver, url):
-        pass
+def open(driver,)
 
-    def _navigate_to(self):
-        pass
+
+
+
+def _navigate_to():
+    pass

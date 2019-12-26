@@ -29,6 +29,7 @@ class PyleniumDriver:
         self.browser = browser
         self.browser._web_element_cls = PyleniumElement
         self.navigator = Navigator()
+        self.wait = PyleniumWait(self.config.explicit_wait, self.config.polling_interval)
 
     @property
     def browser(self):
@@ -43,20 +44,12 @@ class PyleniumDriver:
             else EventFiringWebDriver(value, get_instance_of_listener_from_path(path))
         )
 
+    # Navigational capabilities
     def open(self, url):
         return self.navigator.open(self.browser, url)
 
-    def wait(self) -> PyleniumWait:
-        return PyleniumWait(
-            self.browser, self.config.explicit_wait, self.config.polling_interval
-        )
-
     def quit(self):
         self.browser.close()
-
-    def get(self, url: str):
-        self.browser.get(url)
-        return self
 
     @property
     def title(self):

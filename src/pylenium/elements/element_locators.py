@@ -18,33 +18,33 @@
 from selenium.webdriver.common import by
 
 
-def id(value: str):
+def by_id(value: str):
     return by.ID(value)
 
 
-def xpath(value: str):
+def by_xpath(value: str):
     return by.XPATH(value)
 
 
-def link_text(value: str):
+def by_link_text(value: str):
     return by.LINK_TEXT(value)
 
 
-def partial_link_text(value: str):
+def by_partial_link_text(value: str):
     return by.PARTIAL_LINK_TEXT(value)
 
 
-def name(value: str):
+def by_name(value: str):
     return by.NAME(value)
 
 
-def tag_name(value: str):
+def by_tag_name(value: str):
     return by.TAG_NAME(value)
 
 
-def class_name(value: str):
+def by_class_name(value: str):
     return by.CLASS_NAME(value)
 
 
-def css(value: str):
+def by_css(value: str):
     return by.CSS_SELECTOR(value)
