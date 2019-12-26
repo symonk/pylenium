@@ -25,7 +25,6 @@ setup(
     long_description=read("README.md"),
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=["pytest>=5.3.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Pytest",
