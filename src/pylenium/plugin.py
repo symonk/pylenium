@@ -10,16 +10,16 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
+from pylenium.ascii.ascii import ASCII
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.exceptions.exceptions import PyleniumArgumentException
+from pylenium.exceptions.custom_exceptions import PyleniumArgumentException
 from pylenium.logging.log import log
-from pylenium.resources.ascii import ASCII
 from pylenium.strategies.page_loading_strategy import (
     SlowLoadingPageStrategy,
     FastLoadingPageStrategy,
     NormalLoadingPageStrategy,
 )
-from pylenium.string_globals import (
+from pylenium.constants.string_globals import (
     PYLENIUM,
     CHROME,
     EXEC_STARTED,
@@ -28,9 +28,9 @@ from pylenium.string_globals import (
     REMOTE,
     FIREFOX,
 )
-from pylenium.utilities import plugin_log_seperate, plugin_log_message
-from pylenium.webdriver.pylenium_driver import PyleniumDriver
-from pylenium.webelements.pylenium_element import PyleniumElement
+from pylenium.utilities.plugin_utility import plugin_log_seperate, plugin_log_message
+from pylenium.driver.pylenium_driver import PyleniumDriver
+from pylenium.elements.pylenium_element import PyleniumElement
 
 thread_local_drivers = None
 configuration = None
@@ -148,7 +148,7 @@ def pytest_addoption(parser):
         action="store",
         dest="base_url",
         default="http://localhost:8080",
-        help="Specify a base url to launch when any webdriver are instantiated",
+        help="Specify a base url to launch when any driver are instantiated",
     )
 
     group.addoption(

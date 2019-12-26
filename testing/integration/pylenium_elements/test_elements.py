@@ -18,7 +18,7 @@
 from assertpy import assert_that
 
 from pylenium.plugin import XPATH
-from pylenium.webelements.pylenium_element import PyleniumElement
+from pylenium.elements.pylenium_element import PyleniumElement
 
 
 def test_element_type(driver):

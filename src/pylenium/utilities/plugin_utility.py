@@ -2,8 +2,8 @@ import logging
 import os
 from runpy import run_path
 
-from pylenium.exceptions.exceptions import PyleniumEventFiringWrapperException
-from pylenium.string_globals import PYTEST_XDIST_WORKER
+from pylenium.exceptions.custom_exceptions import PyleniumEventFiringWrapperException
+from pylenium.constants.string_globals import PYTEST_XDIST_WORKER
 
 log = logging.getLogger("Pylenium")
 

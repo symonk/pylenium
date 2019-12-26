@@ -17,10 +17,9 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
-from pylenium.core.navigator import Navigator
-from pylenium.utilities import get_instance_of_listener_from_path
-from pylenium.waiting.pylenium_wait import PyleniumWait
-from pylenium.webelements.pylenium_element import PyleniumElement
+from pylenium.utilities.plugin_utility import get_instance_of_listener_from_path
+from pylenium.elements.pylenium_wait import PyleniumWait
+from pylenium.elements.pylenium_element import PyleniumElement
 
 
 class PyleniumDriver:
@@ -28,8 +27,9 @@ class PyleniumDriver:
         self.config = config
         self.browser = browser
         self.browser._web_element_cls = PyleniumElement
-        self.navigator = Navigator()
-        self.wait = PyleniumWait(self.config.explicit_wait, self.config.polling_interval)
+        self.wait = PyleniumWait(
+            self.config.explicit_wait, self.config.polling_interval
+        )
 
     @property
     def browser(self):
@@ -45,8 +45,9 @@ class PyleniumDriver:
         )
 
     # Navigational capabilities
-    def open(self, url):
-        return self.navigator.open(self.browser, url)
+    def get(self, url):
+        self.browser.get(url)
+        return self
 
     def quit(self):
         self.browser.close()

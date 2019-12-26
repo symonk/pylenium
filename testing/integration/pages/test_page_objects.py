@@ -18,7 +18,7 @@
 from assertpy import assert_that
 from selenium.webdriver.chrome.webdriver import WebDriver
 
-from pylenium.core.page_objects import Page
+from pylenium.page_objects.py_page import Page
 
 
 class MyPage(Page):

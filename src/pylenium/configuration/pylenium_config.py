@@ -4,11 +4,11 @@ from typing import Dict, Type
 import yaml
 from yaml.parser import ParserError
 
-from pylenium.exceptions.exceptions import (
+from pylenium.exceptions.custom_exceptions import (
     PyleniumCapabilitiesException,
     PyleniumInvalidYamlException,
 )
-from pylenium.string_globals import (
+from pylenium.constants.string_globals import (
     LOCALHOST_URL,
     CHROME,
     NO_CAP_FILE_FOUND_EXCEPTION,
@@ -55,7 +55,7 @@ class PyleniumConfig:
         --sendkeys_with_js: Attempt to send keys (text) using javascript actions (not selenium click actions)
         --default_selector: Default selector for PyleniumElements to use for lookup
         --no-wrap-driver: Should pylenium wrap the driver instance in our own EventFiringWebDriver
-        --driver-listener: The path to the .py module we should load your event firing webdriver listener from
+        --driver-listener: The path to the .py module we should load your event firing driver listener from
     """
 
     def __init__(self, config):

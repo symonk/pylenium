@@ -70,6 +70,6 @@ def test_event_firing_driver(testdir):
 
     result = testdir.runpytest(f"--driver-listener=/made/up/path", "-v")
     result.stdout.fnmatch_lines(
-        ["*pylenium.exceptions.exceptions.PyleniumEventFiringWrapperException*",]
+        ["*pylenium.exceptions.custom_exceptions.PyleniumEventFiringWrapperException*",]
     )
     assert result.ret == 1

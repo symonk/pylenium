@@ -1,5 +1,5 @@
-from pylenium.string_globals import PYTEST_XDIST_WORKER
-from pylenium.utilities import is_master_process
+from pylenium.constants.string_globals import PYTEST_XDIST_WORKER
+from pylenium.utilities.plugin_utility import is_master_process
 
 
 def test_is_master_on_xdist_worker(monkeypatch):
