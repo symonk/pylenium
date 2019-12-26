@@ -41,7 +41,7 @@ Human readable, concise and most importantly **stable!**
       find(id('username')).should_have(text('Hello, Simon!'))    
       
       # alternatively
-       by_id("//*[@class='find']").child("span").should_be(hidden()) 
+       by_xpath("//*[@class='find']").child("span").should_be(hidden()) 
 
     # But I want page objects! - so easy: @see: below
     def test_with_pages(self):
