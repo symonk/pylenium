@@ -65,3 +65,19 @@ def test_override(testdir):
         ["*::test_override PASSED*",]
     )
     assert result.ret == 0
+
+
+def fix_this(testdir):
+    testdir.makepyfile(
+        """
+        def test_file_not_found_override(driver):
+            from pylenium.exceptions.exceptions import PyleniumEventFiringWrapperException
+            with pytest.raises(PyleniumEventFiringWrapperException):
+                pass
+    """
+    )
+    result = testdir.runpytest(f"--driver-listener=/made/up/path", "-v")
+    result.stdout.fnmatch_lines(
+        ["*::test_file_not_found_override FAILED*",]
+    )
+    assert result.ret == 4
