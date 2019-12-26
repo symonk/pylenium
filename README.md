@@ -34,32 +34,19 @@ Human readable, concise and most importantly **stable!**
 ```python
     @pytest.mark.pylenium(case='testcase-101', issue_id='issue-949', description='Logging in is so easy!')
     def test_my_login():
-      start('http://www.google.co.uk')
+      open('http://www.google.co.uk')
       find(name('user.name')).set_value('simon')
       find(name('password')).set_value('securepassword')
       find('#submit')).click()  # default selector
-      find(id('username')).should_have(text('Hello, Simon!'))      
+      find(id('username')).should_have(text('Hello, Simon!'))    
+      
+      # alternatively
+       by_id("//*[@class='find']").child("span").should_be(hidden()) 
 
     # But I want page objects! - so easy: @see: below
-    def test_some_cool_page(self):
-        start(ExampleLoginPage()) # page loaded, page object instantiated!
+    def test_with_pages(self):
+        start(MyLoginPage) # no need to pass a driver through to page objects
 ```
-
-Other examples
----
-```python
-def test_no_driver():   
-    open("https://www.google.com")
-    element = find("#some_locator") # default configurable through the plugin --default-locator
-    another_element = XPATH("//*[@class='cool']")
-    
-    # slick assertions?
-    element = find("#locator").should_be(visible()).should_have(text("Click Me"))
-    
-    # chaining?
-    element = XPATH("//*[@class='find']").child("span").should_be(hidden())
-```
-
 
 ---
 
