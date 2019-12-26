@@ -1,6 +1,8 @@
 import logging
 import os
+from runpy import run_path
 
+from pylenium.exceptions.exceptions import PyleniumEventFiringWrapperException
 from pylenium.string_globals import PYTEST_XDIST_WORKER
 
 log = logging.getLogger("Pylenium")
@@ -31,3 +33,13 @@ def is_a_file(file_path: str) -> bool:
     :return: True if the file does exist
     """
     return os.path.exists(file_path)
+
+
+def get_instance_of_listener_from_path(module_file_path):
+    if is_a_file(module_file_path):
+        event_listener_module = run_path(module_file_path)
+        return event_listener_module["PyleniumEventListener"]()
+    else:
+        raise PyleniumEventFiringWrapperException(
+            "--driver-listener= path was not found, is it correct?"
+        )

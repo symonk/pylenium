@@ -11,10 +11,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.webdriver.pylenium_driver import PyleniumDriver
 from pylenium.exceptions.exceptions import PyleniumArgumentException
 from pylenium.logging.log import log
-from pylenium.plugin_util import plugin_log_seperate, plugin_log_message
 from pylenium.resources.ascii import ASCII
 from pylenium.strategies.page_loading_strategy import (
     SlowLoadingPageStrategy,
@@ -30,6 +28,8 @@ from pylenium.string_globals import (
     REMOTE,
     FIREFOX,
 )
+from pylenium.utilities import plugin_log_seperate, plugin_log_message
+from pylenium.webdriver.pylenium_driver import PyleniumDriver
 from pylenium.webelements.pylenium_element import PyleniumElement
 
 thread_local_drivers = None
