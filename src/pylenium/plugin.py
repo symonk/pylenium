@@ -408,13 +408,11 @@ def browser_maximized(request):
 @pytest.fixture
 def chrome_switches(request, browser):
     chrome_switches = request.config.getoption('chrome_switches')
-
-    if browser != CHROME:
+    if chrome_switches is not None and browser != CHROME:
         raise PyleniumCommandLineArgException('Attempting to use the chrome_switches fixture with non chrome browser')
     elif not chrome_switches:
         raise PyleniumCommandLineArgException('Attempting to use the chrome_switches fixture without --chrome-switches')
-    else:
-        return chrome_switches
+    return chrome_switches
 
 
 @pytest.fixture
@@ -424,8 +422,7 @@ def pylenium_config():
 
 @pytest.fixture
 def driver(pylenium_config):
-    driver = get_webdriver()
-    yield driver
+    return get_webdriver()
 
 
 @pytest.fixture(autouse=True)
