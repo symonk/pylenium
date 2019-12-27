@@ -428,10 +428,9 @@ def driver(pylenium_config):
 @pytest.fixture(autouse=True)
 def destroy_drivers(request):
     def finalizer():
-        for driver in thread_local_drivers.threaded_drivers.drivers.values():
+        driver = thread_local_drivers.threaded_drivers.drivers.pop(threading.get_ident(), None)
+        if not driver:
             driver.quit()
-        thread_local_drivers.threaded_drivers.drivers.pop(threading.get_ident(), None)
-
     request.addfinalizer(finalizer)
 
 
