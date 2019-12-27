@@ -429,7 +429,7 @@ def driver(pylenium_config):
 def destroy_drivers(request):
     def finalizer():
         driver = thread_local_drivers.threaded_drivers.drivers.pop(threading.get_ident(), None)
-        if not driver:
+        if driver is not None:
             driver.quit()
     request.addfinalizer(finalizer)
 
