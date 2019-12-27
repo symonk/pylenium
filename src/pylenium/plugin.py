@@ -12,7 +12,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 from pylenium.ascii.ascii import ASCII
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from pylenium.exceptions.custom_exceptions import PyleniumArgumentException
+from pylenium.exceptions.custom_exceptions import PyleniumArgumentException, PyleniumCommandLineArgException
 from pylenium.logging.log import log
 from pylenium.strategies.page_loading_strategy import (
     SlowLoadingPageStrategy,
@@ -235,6 +235,13 @@ def pytest_addoption(parser):
         help="Should pylenium maximize the browser when it is instantiated",
     )
 
+    group.addoption(
+        "--chrome-switches",
+        type=lambda option: option.strip().split(','),
+        help="delimited list of chrome options / switches",
+        default=[]
+    )
+
 
 def pytest_configure(config):
     _resolve_config_from_parseargs(config)
@@ -399,6 +406,18 @@ def browser_maximized(request):
 
 
 @pytest.fixture
+def chrome_switches(request, browser):
+    chrome_switches = request.config.getoption('chrome_switches')
+
+    if browser != CHROME:
+        raise PyleniumCommandLineArgException('Attempting to use the chrome_switches fixture with non chrome browser')
+    elif not chrome_switches:
+        raise PyleniumCommandLineArgException('Attempting to use the chrome_switches fixture without --chrome-switches')
+    else:
+        return chrome_switches
+
+
+@pytest.fixture
 def pylenium_config():
     return configuration
 
@@ -472,9 +491,8 @@ class AbstractDriverFactory(ABC):
 class ChromeDriverFactory(AbstractDriverFactory):
     def resolve_capabilities(self) -> Options:
         pylenium_chrome_opts = Options()
-        pylenium_chrome_opts.add_argument("--headless")
-        pylenium_chrome_opts.add_argument("--no-sandbox")
-        pylenium_chrome_opts.add_argument("--disable-dev-shm-usage")
+        for switch in configuration.chrome_switches:
+            pylenium_chrome_opts.add_argument(switch)
         return pylenium_chrome_opts
 
     def get_driver(self):

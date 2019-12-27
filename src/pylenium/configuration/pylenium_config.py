@@ -56,6 +56,7 @@ class PyleniumConfig:
         --default_selector: Default selector for PyleniumElements to use for lookup
         --no-wrap-driver: Should pylenium wrap the driver instance in our own EventFiringWebDriver
         --driver-listener: The path to the .py module we should load your event firing driver listener from
+        --chrome-switches: The list of switches to pass to Chrome Options before creating the driver
     """
 
     def __init__(self, config):
@@ -87,6 +88,7 @@ class PyleniumConfig:
         self.sendkeys_with_js: bool = config.getoption("sendkeys_with_js")
         self.default_selector: str = config.getoption("default_selector")
         self.driver_listener: str = config.getoption("driver_listener")
+        self.chrome_switches: list = config.getoption("chrome_switches")
 
     @staticmethod
     def _try_parse_capabilities_yaml(file_path) -> dict:
