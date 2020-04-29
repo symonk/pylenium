@@ -2,3 +2,4 @@ comment: off
 
 ignore:
   - "**/setup.py"
+  - "**/__project_root__.py"
