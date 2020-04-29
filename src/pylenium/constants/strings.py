@@ -15,9 +15,10 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from selenium.webdriver.remote.webelement import WebElement
+
+# Plugin Misc
+PYLENIUM = "Pylenium"
 
 
-class PyleniumElement(WebElement):
-    def __init__(self, parent, id_, w3c=False):
-        super().__init__(parent, id_, w3c)
+# Browser Related
+CHROME = "Chrome"

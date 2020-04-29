@@ -1,8 +1,4 @@
+comment: off
+
 ignore:
-  - "testing"  # ignore folders and all its contents
-  - "**/__init__.py"
-  - "**/string_globals.py"
-  - "**/ascii.py"
-  - "**/_version.py"
-  - "def pytest*"
-  - "import *"
+  - "**/setup.py"

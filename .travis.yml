@@ -6,19 +6,22 @@ python: 3.7
 install:
   - pip install tox-travis
 script:
-  - tox -p 30
+  - tox -p 10 -- --cov=./
   - sonar-scanner -Dsonar.projectKey=symonk_pylenium  -Dsonar.organization=symonk-github
 branches:
   only:
     - master
 git:
-  depth: 99999
+  depth: 1
 
 before-install:
   - "export DISPLAY=99:0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
   - export CHROME_BIN=/usr/bin/google-chrome
+
+after_success:
+  - codecov
 
 cache:
   directories:

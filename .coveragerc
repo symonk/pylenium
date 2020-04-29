@@ -1,16 +1,21 @@
 [run]
-branch = True
-source = codecov
+parallel = 1
+branch = 1
+
+[paths]
+source = src/
+  */lib/python*/site-packages/
+  */pypy*/site-packages/
+  *\Lib\site-packages\
 
 [report]
+skip_covered = True
+show_missing = True
 exclude_lines =
-    pragma: no cover
-    def __repr__
-    if .debug:
-    raise NotImplementedError
-    if __name__ == .__main__.:
-ignore_errors = True
+    \#\s*pragma: no cover
+    ^\s*raise NotImplementedError\b
+    ^\s*return NotImplemented\b
+    ^\s*if TYPE_CHECKING:
+    ^\s*pass
 omit =
-    venv/*
-    tests/*
     setup.py
