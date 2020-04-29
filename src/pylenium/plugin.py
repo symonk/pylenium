@@ -20,7 +20,6 @@ def pytest_addoption(parser):
     group.addoption(
         "--headless",
         action="store_true",
-        default=False,
         dest="headless",
         help="Specify if the browser should be headless",
     )
