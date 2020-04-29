@@ -1,5 +1,6 @@
 from pylenium import PYLENIUM
 from pylenium import CHROME
+from pylenium import FIREFOX
 
 
 def pytest_addoption(parser):
@@ -12,6 +13,7 @@ def pytest_addoption(parser):
         action="store",
         dest="browser",
         default=CHROME,
+        choices=[CHROME, FIREFOX],
         help="Specify the browser pylenium should use",
     )
 
