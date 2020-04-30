@@ -20,19 +20,21 @@ from pytest import ExitCode
 
 def test_browser_is_not_headless_by_default(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_browser_is_not_headless(request):
         assert not request.config.getoption('headless')
-    """)
+    """
+    )
     result = testdir.inline_run()
     assert result.ret == ExitCode.OK
 
 
 def test_browser_can_be_headless(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_browser_can_be_headless(request):
         assert request.config.getoption('headless')
-    """)
-    result = testdir.inline_run('--headless')
+    """
+    )
+    result = testdir.inline_run("--headless")
     assert result.ret == ExitCode.OK

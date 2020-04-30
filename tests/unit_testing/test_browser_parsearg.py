@@ -30,30 +30,33 @@ from pytest import ExitCode
 
 def test_default_browser_is_chrome(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_default_browser_is_chrome(request):
         assert request.config.getoption('browser') == 'Chrome'
-    """)
+    """
+    )
     result = testdir.inline_run()
     assert result.ret == ExitCode.OK
 
 
 def test_overriding_to_firefox_is_supported(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_browser_can_be_firefox(request):
         assert request.config.getoption('browser') == 'Firefox'
-    """)
-    result = testdir.inline_run('--browser=Firefox')
+    """
+    )
+    result = testdir.inline_run("--browser=Firefox")
     assert result.ret == ExitCode.OK
 
 
 def test_cannot_set_browser_to_supported_choice(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_browser_can_be_firefox(request):
         pass
-    """)
-    result = testdir.runpytest('--browser=Unsupported')
+    """
+    )
+    result = testdir.runpytest("--browser=Unsupported")
     result.stderr.fnmatch_lines(["*--browser: invalid choice: 'Unsupported'*"])
     assert result.ret == ExitCode.USAGE_ERROR

@@ -26,9 +26,9 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--command_executor",
+        "--command-executor",
         action="store",
-        dest="selenium_grid",
+        dest="selenium_grid_url",
         default=GRID_LOCALHOST,
         help="Specify the full url for your selenium hub, should include /wd/hub",
     )

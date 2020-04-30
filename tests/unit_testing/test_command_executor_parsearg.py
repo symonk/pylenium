@@ -20,10 +20,22 @@ from pytest import ExitCode
 
 def test_default_commmand_executor(testdir):
     testdir.makepyfile(
-    """
+        """
     def test_default_commmand_executor(request):
         from pylenium import GRID_LOCALHOST
-        assert request.config.getoption('selenium_grid') == GRID_LOCALHOST
-    """)
+        assert request.config.getoption('selenium_grid_url') == GRID_LOCALHOST
+    """
+    )
     result = testdir.inline_run()
+    assert result.ret == ExitCode.OK
+
+
+def test_default_commmand_executor_override(testdir):
+    testdir.makepyfile(
+        """
+    def test_default_commmand_executor_override(request):
+        assert request.config.getoption('selenium_grid_url') == "https://10.0.0.1:4444/wd/hub"
+    """
+    )
+    result = testdir.runpytest("--command-executor", "https://10.0.0.1:4444/wd/hub")
     assert result.ret == ExitCode.OK
