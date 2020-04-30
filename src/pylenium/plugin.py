@@ -1,4 +1,5 @@
 from pylenium import PYLENIUM
+from pylenium import GRID_LOCALHOST
 from pylenium import CHROME
 from pylenium import FIREFOX
 
@@ -25,27 +26,11 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--remote",
-        action="store_true",
-        dest="remote",
-        help="Specify if the browser should be remote (selenium grid)",
-    )
-
-    group.addoption(
-        "--server",
+        "--command_executor",
         action="store",
-        dest="server",
-        default="http://localhost",
-        help="Specify the selenium hub server url",
-    )
-
-    group.addoption(
-        "--server_port",
-        action="store",
-        default=4444,
-        type=int,
-        dest="server_port",
-        help="Specify the selenium hub port",
+        dest="selenium_grid",
+        default=GRID_LOCALHOST,
+        help="Specify the full url for your selenium hub, should include /wd/hub",
     )
 
     group.addoption(
