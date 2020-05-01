@@ -1,3 +1,5 @@
+from pytest import fixture
+
 from pylenium import PYLENIUM
 from pylenium import GRID_LOCALHOST
 from pylenium import CHROME
@@ -70,6 +72,13 @@ def pytest_addoption(parser):
         action="store",
         dest="browser_capabilities",
         help="Specify a python file which contains a dictionary outlining browser capabilities",
+    )
+
+    group.addoption(
+        "--chrome-switches",
+        type=lambda option: option.strip().split(","),
+        help="delimited list of chrome options / switches",
+        default=[],
     )
 
     group.addoption(
@@ -164,12 +173,10 @@ def pytest_addoption(parser):
         help="Should pylenium maximize the browser when it is instantiated",
     )
 
-    group.addoption(
-        "--chrome-switches",
-        type=lambda option: option.strip().split(","),
-        help="delimited list of chrome options / switches",
-        default=[],
-    )
+
+@fixture(name="webdriver")
+def pylenium_webdriver():
+    yield []
 
 
 def pytest_configure(config):

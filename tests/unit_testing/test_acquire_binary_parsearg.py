@@ -15,15 +15,26 @@
 #  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 #  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from pytest import ExitCode
 
-#  MIT License
-#
-#
-#  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-#  documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-#  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-#  and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-#
-#
 
-all = []
+def test_browser_acquire_binary_on(testdir):
+    testdir.makepyfile(
+        """
+    def test_browser_acquire_binary(request):
+        assert request.config.getoption('acquire_binary')
+    """
+    )
+    result = testdir.inline_run("--acquire-binary")
+    assert result.ret == ExitCode.OK
+
+
+def test_browser_acquire_binary_off(testdir):
+    testdir.makepyfile(
+        """
+    def test_browser_can_be_headless(request):
+        assert not request.config.getoption('acquire_binary')
+    """
+    )
+    result = testdir.inline_run("")
+    assert result.ret == ExitCode.OK
