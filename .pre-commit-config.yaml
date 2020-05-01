@@ -5,6 +5,11 @@ repos:
         hooks:
             - {id: black, args: ['--safe', '--quiet'], language_version: python3.7}
     -
+        repo: 'git@github.com:humitos/mirrors-autoflake.git'
+        rev: v1.1
+        hooks:
+            - {id: autoflake, args: ['--in-place', '--remove-all-unused-imports', '--remove-unused-variable']}
+    -
         repo: 'https://github.com/pre-commit/pre-commit-hooks'
         rev: v1.3.0
         hooks:

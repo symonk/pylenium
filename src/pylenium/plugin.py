@@ -4,6 +4,7 @@ from pylenium import PYLENIUM
 from pylenium import GRID_LOCALHOST
 from pylenium import CHROME
 from pylenium import FIREFOX
+from pylenium import DriverController
 
 
 def pytest_addoption(parser):
@@ -174,9 +175,11 @@ def pytest_addoption(parser):
     )
 
 
-@fixture(name="webdriver")
-def pylenium_webdriver():
-    yield
+@fixture(name="pydriver")
+def pylenium_webdriver(request):
+    factory = DriverController()
+    request.addfinalizer(factory.finish)
+    yield factory.start()
 
 
 def pytest_configure(config):

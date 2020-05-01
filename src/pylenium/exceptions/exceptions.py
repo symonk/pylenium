@@ -1,0 +1,2 @@
+class NoThreadedDriverFoundException(Exception):
+    pass
