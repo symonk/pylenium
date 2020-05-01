@@ -12,7 +12,7 @@ branches:
   only:
     - master
 git:
-  depth: 1
+  depth: 99999
 
 before-install:
   - sleep 3
@@ -31,8 +31,12 @@ addons:
   apt:
     update: true
   chrome: stable
+  firefox: latest
   sonarcloud:
     organization: symonk-github
 
 packages:
   - google-chrome-stable
+
+notifications:
+  email: false
