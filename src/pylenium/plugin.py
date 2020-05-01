@@ -176,7 +176,7 @@ def pytest_addoption(parser):
 
 @fixture(name="webdriver")
 def pylenium_webdriver():
-    yield []
+    yield
 
 
 def pytest_configure(config):
