@@ -180,7 +180,3 @@ def pylenium_webdriver(request):
     factory = DriverController()
     request.addfinalizer(factory.finish)
     yield factory.start()
-
-
-def pytest_configure(config):
-    pass
