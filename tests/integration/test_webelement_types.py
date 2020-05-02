@@ -9,5 +9,5 @@ def test_web_element_types(testdir):
             assert isinstance(pydriver, WebDriver)
         """
     )
-    result = testdir.runpytest("--acquire-binary")
+    result = testdir.runpytest("--acquire-binary", "--headless")
     assert result.ret == ExitCode.OK

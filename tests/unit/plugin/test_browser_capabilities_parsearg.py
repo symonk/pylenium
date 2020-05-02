@@ -41,7 +41,7 @@ def test_desired_caps_get_loaded_into_browser(testdir):
 
     testdir.makepyfile(
         """
-        def test_browser_capabilities_py_file(py_desired_caps, pydriver):
+        def test_browser_capabilities_py_file(py_desired_caps):
             assert py_desired_caps['a'] == 1
             assert py_desired_caps['b'] == 2
             assert py_desired_caps['c'] == 3

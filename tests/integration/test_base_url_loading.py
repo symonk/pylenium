@@ -9,7 +9,7 @@ def test_base_url_loading_is_correct(testdir):
         """
     )
     result = testdir.runpytest(
-        "--base-url", "http://localhost:8080", "--acquire-binary"
+        "--base-url", "http://localhost:8080", "--acquire-binary", "--headless"
     )
     assert result.ret == ExitCode.OK
 
@@ -21,6 +21,6 @@ def test_base_url_invalid_url(testdir):
             pass
         """
     )
-    result = testdir.runpytest("--base-url", "goog")
+    result = testdir.runpytest("--base-url", "goog", "--headless")
     assert result.ret == ExitCode.USAGE_ERROR
     result.stderr.fnmatch_lines(["ERROR: url: goog was not a valid url"])

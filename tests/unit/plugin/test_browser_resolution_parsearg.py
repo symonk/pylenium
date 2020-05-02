@@ -34,10 +34,10 @@ def test_default_browser_resolution(testdir):
 def test_browser_resolution_custom(testdir):
     testdir.makepyfile(
         """
-    def test_default_browser_resolution(request, pydriver):
-        window = pydriver.get_window_size()
-        assert window['width'] == 1920
-        assert window['height'] == 1080
+    def test_default_browser_resolution(request):
+        width, height = request.config.getoption('browser_resolution')
+        assert width == '1920'
+        assert height == '1080'
     """
     )
     result = testdir.runpytest(
