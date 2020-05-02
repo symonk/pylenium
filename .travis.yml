@@ -19,7 +19,7 @@ before-install:
   - export CHROME_BIN=/usr/bin/google-chrome
 
 services:
-  xvfb
+  - xvfb
 
 after_success:
   - codecov
