@@ -1,12 +1,12 @@
 from pytest import fixture
 
-from pylenium import PYLENIUM
-from pylenium import GRID_LOCALHOST
-from pylenium import CHROME
-from pylenium import FIREFOX
-from pylenium import DriverController
-from pylenium import is_py_file
-from pylenium import validate_url
+from pylenium.constants.strings import PYLENIUM
+from pylenium.constants.strings import GRID_LOCALHOST
+from pylenium.constants.strings import CHROME
+from pylenium.constants.strings import FIREFOX
+from pylenium.webdriver.driver_manager import DriverManager
+from pylenium.utility.operating_system import is_py_file
+from pylenium.utility.network import validate_url
 
 
 def pytest_addoption(parser):
@@ -19,6 +19,7 @@ def pytest_addoption(parser):
         action="store",
         dest="browser",
         default=CHROME,
+        type=lambda browser: browser.lower(),
         choices=[CHROME, FIREFOX],
         help="Specify the browser pylenium should use",
     )
@@ -180,9 +181,9 @@ def pytest_addoption(parser):
 
 @fixture(name="pydriver")
 def pylenium_webdriver(request):
-    factory = DriverController(request.config)
-    request.addfinalizer(factory.finish)
-    yield factory.start()
+    driver_manager = DriverManager(request.config)
+    request.addfinalizer(driver_manager.shutdown_driver)
+    yield driver_manager.start_driver()
 
 
 def pytest_configure(config) -> None:

@@ -22,7 +22,7 @@ def test_default_commmand_executor(testdir):
     testdir.makepyfile(
         """
     def test_default_commmand_executor(request):
-        from pylenium import GRID_LOCALHOST
+        from pylenium.constants.strings import GRID_LOCALHOST
         assert request.config.getoption('selenium_grid_url') == GRID_LOCALHOST
     """
     )

@@ -32,7 +32,7 @@ def test_default_browser_is_chrome(testdir):
     testdir.makepyfile(
         """
     def test_default_browser_is_chrome(request):
-        assert request.config.getoption('browser') == 'Chrome'
+        assert request.config.getoption('browser') == 'chrome'
     """
     )
     result = testdir.inline_run()
@@ -43,7 +43,7 @@ def test_overriding_to_firefox_is_supported(testdir):
     testdir.makepyfile(
         """
     def test_browser_can_be_firefox(request):
-        assert request.config.getoption('browser') == 'Firefox'
+        assert request.config.getoption('browser') == 'firefox'
     """
     )
     result = testdir.inline_run("--browser=Firefox")
