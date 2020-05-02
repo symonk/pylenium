@@ -26,8 +26,8 @@
 #
 #
 from .webdriver.driver_manager import DriverManager
-from .webelement.pylenium_element import PyleniumElement
+from .webelement.pylenium_element import PyleniumWebElement
 from .utility.operating_system import is_py_file
 from .utility.network import validate_url
 
-all = [DriverManager, PyleniumElement, is_py_file, validate_url]
+all = [DriverManager, PyleniumWebElement, is_py_file, validate_url]

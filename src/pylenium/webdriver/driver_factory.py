@@ -7,6 +7,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from webdriver_manager.chrome import ChromeDriverManager
+from pylenium.webelement.pylenium_element import PyleniumWebElement
 
 
 class AbstractDriverFactory(ABC):
@@ -53,6 +54,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
             options=self.chrome_options,
             desired_capabilities=self.desired_capabilities,
         )
+        self._apply_custom_webelement_to_driver(driver)
         return self._load_base_url_if_necessary(driver)
 
     def _load_base_url_if_necessary(self, driver) -> WebDriver:
@@ -101,3 +103,12 @@ class ChromeDriverFactory(AbstractDriverFactory):
         :return: None; this is done in-place on self.desired_capabilities
         """
         self.desired_capabilities = self.config.getoption("browser_capabilities")
+
+    def _apply_custom_webelement_to_driver(self, driver) -> WebDriver:
+        """
+        Modifies the instantiated drivers returned WebElement to our custom child class, this enables us to take more
+        control of WebElements and make them a lot more test friendly
+        :return: The driver instance for fluency
+        """
+        driver._web_element_cls = PyleniumWebElement
+        return driver
