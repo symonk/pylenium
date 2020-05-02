@@ -29,22 +29,6 @@ def test_browser_not_a_real_py_file(testdir):
     )
 
 
-def test_valid_file_is_ok(testdir):
-    capabilities = testdir.makepyfile(
-        """
-        capabilities = {}
-        """
-    )
-    testdir.makepyfile(
-        """
-        def test_browser_capabilities_py_file(request):
-            pass
-        """
-    )
-    result = testdir.runpytest("--browser-capabilities", capabilities)
-    assert result.ret == ExitCode.OK
-
-
 def test_desired_caps_get_loaded_into_browser(testdir):
     capabilities = testdir.makepyfile(
         custom="""

@@ -14,6 +14,8 @@ class AbstractDriverFactory(ABC):
         self.config = config
         self.base_url = self._config_pluck("base_url")
         self.headless = self._config_pluck("headless")
+        self.resolution = self._config_pluck("browser_resolution")
+        self.maximized = not self._config_pluck("browser_not_maximized")
 
     @abstractmethod
     def create_driver(self) -> WebDriver:
@@ -79,11 +81,18 @@ class ChromeDriverFactory(AbstractDriverFactory):
     def _resolve_options(self) -> None:
         """
         Build up chrome options through what is passed to the CLI as well as what is provided on the command line args
+        note: if the browser is maximized, --browser-resolution wont play any part, we apply it first
         :return: None; this is done in-place on self.chrome_options
         """
         if self.headless:
             self.chrome_options.add_argument("--headless")
             self.chrome_options.add_argument("--disable-gpu")
+        if self.resolution:
+            self.chrome_options.add_argument(
+                f"--window-size={self.resolution.width},{self.resolution.height}"
+            )
+        if self.maximized:
+            self.chrome_options.add_argument("--start-maximized")
 
     def _resolve_desired_capabilities(self) -> None:
         """

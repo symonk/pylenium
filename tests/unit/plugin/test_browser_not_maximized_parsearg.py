@@ -18,29 +18,23 @@
 from pytest import ExitCode
 
 
-def test_default_browser_resolution(testdir):
+def test_browser_maximized_by_default(testdir):
     testdir.makepyfile(
         """
-    def test_default_browser_resolution(request):
-        width, height = request.config.getoption('browser_resolution')
-        assert width == '1280'
-        assert height == '1024'
+    def test_browser_maximized_by_default(request):
+        assert not request.config.getoption('browser_not_maximized')
     """
     )
-    result = testdir.inline_run()
+    result = testdir.runpytest("--acquire-binary")
     assert result.ret == ExitCode.OK
 
 
-def test_browser_resolution_custom(testdir):
+def test_browser_maximized_can_be_disabled(testdir):
     testdir.makepyfile(
         """
-    def test_default_browser_resolution(request, pydriver):
-        window = pydriver.get_window_size()
-        assert window['width'] == 1920
-        assert window['height'] == 1080
+    def test_browser_maximized_can_be_disabled(request):
+        assert request.config.getoption('browser_not_maximized')
     """
     )
-    result = testdir.runpytest(
-        "--browser-resolution", "1920x1080", "--not-maximized", "--acquire-binary"
-    )
+    result = testdir.runpytest("--not-maximized", "--acquire-binary")
     assert result.ret == ExitCode.OK

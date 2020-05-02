@@ -42,4 +42,4 @@ def parse_capabilities_from_disk(path: str) -> Dict:
         raise NoCapabilitiesDictionaryException(
             f"The .py file provided: {path} did not have a 'capabilities' attribute"
             f"Make sure it contains one, explicitly called 'capabilities'"
-        )
+        ) from None

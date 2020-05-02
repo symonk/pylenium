@@ -42,10 +42,23 @@ def pytest_addoption(parser):
         help="Specify the full url for your selenium hub, should include /wd/hub",
     )
 
+    def validate_resolution(res):
+        from collections import namedtuple
+
+        resolution = namedtuple("resolution", "width height")
+        width, height = res.split("x")
+        if not width.isdigit() or not height.isdigit():
+            raise ValueError(
+                "Resolution provided to --browser-resolution was not correctly formatted"
+                "It should be 'widthxheight' e.g => 1920x1080"
+            )
+        return resolution(width, height)
+
     group.addoption(
         "--browser-resolution",
         action="store",
-        default="1920x1080",
+        default="1280x1024",
+        type=validate_resolution,
         dest="browser_resolution",
         help="Specify the browser resolution",
     )
@@ -186,11 +199,10 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--browser-maximized",
+        "--not-maximized",
         action="store_true",
-        default=False,
-        dest="browser_maximized",
-        help="Should pylenium maximize the browser when it is instantiated",
+        dest="browser_not_maximized",
+        help="Disable the browser being maximized",
     )
 
 
