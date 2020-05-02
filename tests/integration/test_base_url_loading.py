@@ -9,7 +9,7 @@ def test_base_url_loading_is_correct(testdir):
         """
     )
     result = testdir.runpytest(
-        "--base-url", "http://localhost:8080", "--acquire-binary"
+        "--base-url", "http://localhost:8080", "--acquire-binary", "--headless"
     )
     assert result.ret == ExitCode.OK
 
