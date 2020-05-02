@@ -36,6 +36,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
     def __init__(self, config):
         super().__init__(config)
         self.chrome_options = ChromeOptions()
+        self.desired_capabilities = None
 
     def create_driver(self) -> WebDriver:
         """
@@ -43,8 +44,13 @@ class ChromeDriverFactory(AbstractDriverFactory):
         :return: the instantiated instance of the chrome driver
         """
         self._resolve_options()
+        self._resolve_desired_capabilities()
         binary_path = self._resolve_driver_path()
-        driver = ChromeDriver(executable_path=binary_path, options=self.chrome_options)
+        driver = ChromeDriver(
+            executable_path=binary_path,
+            options=self.chrome_options,
+            desired_capabilities=self.desired_capabilities,
+        )
         return self._load_base_url_if_necessary(driver)
 
     def _load_base_url_if_necessary(self, driver) -> WebDriver:
@@ -78,3 +84,11 @@ class ChromeDriverFactory(AbstractDriverFactory):
         if self.headless:
             self.chrome_options.add_argument("--headless")
             self.chrome_options.add_argument("--disable-gpu")
+
+    def _resolve_desired_capabilities(self) -> None:
+        """
+        Build up desired caps through what is passed to the CLI as well as what is provided on the command line args
+        note: we could do the merging our selves between options/capabilities but lets let selenium handle it for us.
+        :return: None; this is done in-place on self.desired_capabilities
+        """
+        self.desired_capabilities = self.config.getoption("browser_capabilities")

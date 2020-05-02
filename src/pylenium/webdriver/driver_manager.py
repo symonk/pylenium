@@ -4,11 +4,11 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteDriver
 from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 from pylenium.webdriver.driver_factory import ChromeDriverFactory
 from pylenium.webdriver.driver_factory import AbstractDriverFactory
-from typing import TypedDict
+from typing import Dict
 
 
 class DriverManager:
-    _supported_factories: TypedDict[str, AbstractDriverFactory] = {
+    _supported_factories: Dict[str, AbstractDriverFactory] = {
         "chrome": ChromeDriverFactory
     }
 

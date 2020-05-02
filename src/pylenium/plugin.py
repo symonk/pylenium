@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pytest import fixture
 
 from pylenium.constants.strings import PYLENIUM
@@ -6,6 +8,7 @@ from pylenium.constants.strings import CHROME
 from pylenium.constants.strings import FIREFOX
 from pylenium.webdriver.driver_manager import DriverManager
 from pylenium.utility.operating_system import is_py_file
+from pylenium.utility.operating_system import parse_capabilities_from_disk
 from pylenium.utility.network import validate_url
 
 
@@ -67,15 +70,28 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         dest="driver_binary_path",
-        help="If not using acquire binary, set the directory pylenium should look for the driver bianary",
+        help="If not using acquire binary, set the directory pylenium should look for the driver binary",
     )
+
+    def _resolve_capabilities(file_path: str) -> Dict:
+        """
+        Takes the --desired-capabilities file path, validates it and returns into the config a dictionary of the
+        desired capabilities to be instantiated into the driver at creation time.
+        note: This is exposed through a separate fixture 'py_desired_caps'
+        :param file_path:
+        :return: a dictionary of desired capabilities
+        """
+        is_py_file(file_path)
+        return parse_capabilities_from_disk(file_path)
 
     group.addoption(
         "--browser-capabilities",
         action="store",
         dest="browser_capabilities",
-        type=lambda file_path: is_py_file(file_path),
-        help="Specify a python file which contains a dictionary outlining browser capabilities",
+        type=_resolve_capabilities,
+        default=None,
+        help="Specify a python file which contains a dictionary outlining browser capabilities"
+        "Note: This .py file should contain a dictionary called 'capabilities' explicitly",
     )
 
     group.addoption(
@@ -184,3 +200,8 @@ def pylenium_webdriver(request):
     request.addfinalizer(driver_manager.shutdown_driver)
     driver = driver_manager.start_driver()
     yield driver
+
+
+@fixture(scope="session", name="py_desired_caps")
+def pylenium_desired_capabilities(request):
+    return request.config.getoption("browser_capabilities")

@@ -43,3 +43,27 @@ def test_valid_file_is_ok(testdir):
     )
     result = testdir.runpytest("--browser-capabilities", capabilities)
     assert result.ret == ExitCode.OK
+
+
+def test_desired_caps_get_loaded_into_browser(testdir):
+    capabilities = testdir.makepyfile(
+        custom="""
+        capabilities = {}
+        capabilities['a'] = 1
+        capabilities['b'] = 2
+        capabilities['c'] = 3
+        """
+    )
+
+    testdir.makepyfile(
+        """
+        def test_browser_capabilities_py_file(py_desired_caps, pydriver):
+            assert py_desired_caps['a'] == 1
+            assert py_desired_caps['b'] == 2
+            assert py_desired_caps['c'] == 3
+        """
+    )
+    result = testdir.runpytest(
+        "--browser-capabilities", capabilities, "--acquire-binary"
+    )
+    assert result.ret == ExitCode.OK
