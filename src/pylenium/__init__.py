@@ -31,5 +31,14 @@ from .constants.strings import CHROME
 from .constants.strings import GRID_LOCALHOST
 from .constants.strings import FIREFOX
 from .webelement.pylenium_element import PyleniumElement
+from .utility.operating_system import is_py_file
 
-all = [DriverController, PYLENIUM, CHROME, GRID_LOCALHOST, FIREFOX, PyleniumElement]
+all = [
+    DriverController,
+    PYLENIUM,
+    CHROME,
+    GRID_LOCALHOST,
+    FIREFOX,
+    PyleniumElement,
+    is_py_file,
+]

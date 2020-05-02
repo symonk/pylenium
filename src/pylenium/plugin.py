@@ -5,6 +5,7 @@ from pylenium import GRID_LOCALHOST
 from pylenium import CHROME
 from pylenium import FIREFOX
 from pylenium import DriverController
+from pylenium import is_py_file
 
 
 def pytest_addoption(parser):
@@ -69,9 +70,10 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--browser-capabilities-file",
+        "--browser-capabilities",
         action="store",
         dest="browser_capabilities",
+        type=lambda file_path: is_py_file(file_path),
         help="Specify a python file which contains a dictionary outlining browser capabilities",
     )
 
@@ -180,3 +182,10 @@ def pylenium_webdriver(request):
     factory = DriverController()
     request.addfinalizer(factory.finish)
     yield factory.start()
+
+
+def pytest_configure(config) -> None:
+    """
+    Main entry point for the plugin, hooked by pytest using pluggy
+    :param config: The pytest config object
+    """

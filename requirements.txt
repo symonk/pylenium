@@ -1,4 +1,0 @@
-pre-commit==2.3.0
-pytest==5.3.0
-selenium==3.141.0
-webdriver-manager==2.4.0
