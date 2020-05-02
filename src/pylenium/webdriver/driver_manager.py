@@ -3,10 +3,14 @@ import threading
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteDriver
 from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 from pylenium.webdriver.driver_factory import ChromeDriverFactory
+from pylenium.webdriver.driver_factory import AbstractDriverFactory
+from typing import TypedDict
 
 
 class DriverManager:
-    _supported_factories = {"chrome": ChromeDriverFactory}
+    _supported_factories: TypedDict[str, AbstractDriverFactory] = {
+        "chrome": ChromeDriverFactory
+    }
 
     def __init__(self, config):
         self.config = config
