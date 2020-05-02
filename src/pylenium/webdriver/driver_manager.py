@@ -1,6 +1,7 @@
 import threading
 
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.remote.webdriver import WebDriver as RemoteDriver
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -42,7 +43,12 @@ class DriverFactory:
 
     def build(self) -> RemoteDriver:
         if self.drivers.get(threading.get_ident(), None) is None:
-            driver = ChromeDriver(ChromeDriverManager().install())
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--disable-gpu")
+            driver = ChromeDriver(
+                executable_path=ChromeDriverManager().install(), options=chrome_options
+            )
             self.drivers[threading.get_ident()] = driver
         return self._fetch()
 
