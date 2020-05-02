@@ -32,6 +32,7 @@ from .constants.strings import GRID_LOCALHOST
 from .constants.strings import FIREFOX
 from .webelement.pylenium_element import PyleniumElement
 from .utility.operating_system import is_py_file
+from .utility.network import validate_url
 
 all = [
     DriverController,
@@ -41,4 +42,5 @@ all = [
     FIREFOX,
     PyleniumElement,
     is_py_file,
+    validate_url,
 ]

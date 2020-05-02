@@ -9,8 +9,8 @@ from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 
 
 class DriverController:
-    def __init__(self):
-        self.factory = DriverFactory()
+    def __init__(self, config):
+        self.factory = DriverFactory(config)
 
     def start(
         self, remote=None, capabilities=None, options=None, command_executor=None
@@ -36,7 +36,8 @@ class DriverFactory:
     A factory responsible for instantiating driver instance(s) based on a number of different args provided.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config):
+        self.config = config
         self._thread_storage = threading.local()
         self._thread_storage.drivers = {}
         self.drivers = self._thread_storage.drivers
@@ -49,6 +50,9 @@ class DriverFactory:
             driver = ChromeDriver(
                 executable_path=ChromeDriverManager().install(), options=chrome_options
             )
+            base_url = self.config.getoption("base_url")
+            if base_url:
+                driver.get(base_url)
             self.drivers[threading.get_ident()] = driver
         return self._fetch()
 

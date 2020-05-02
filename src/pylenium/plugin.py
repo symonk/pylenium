@@ -6,6 +6,7 @@ from pylenium import CHROME
 from pylenium import FIREFOX
 from pylenium import DriverController
 from pylenium import is_py_file
+from pylenium import validate_url
 
 
 def pytest_addoption(parser):
@@ -88,7 +89,7 @@ def pytest_addoption(parser):
         "--base-url",
         action="store",
         dest="base_url",
-        default="http://localhost:8080",
+        type=lambda url: validate_url(url),
         help="Specify a base url to launch when any driver are instantiated",
     )
 
@@ -179,7 +180,7 @@ def pytest_addoption(parser):
 
 @fixture(name="pydriver")
 def pylenium_webdriver(request):
-    factory = DriverController()
+    factory = DriverController(request.config)
     request.addfinalizer(factory.finish)
     yield factory.start()
 
