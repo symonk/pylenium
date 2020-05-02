@@ -8,7 +8,9 @@ def test_base_url_loading_is_correct(testdir):
             assert pydriver.current_url == "http://localhost:8080/"
         """
     )
-    result = testdir.runpytest("--base-url", "http://localhost:8080")
+    result = testdir.runpytest(
+        "--base-url", "http://localhost:8080", "--acquire-binary"
+    )
     assert result.ret == ExitCode.OK
 
 

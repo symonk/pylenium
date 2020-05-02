@@ -58,7 +58,6 @@ def pytest_addoption(parser):
     group.addoption(
         "--acquire-binary",
         action="store_true",
-        default=False,
         dest="acquire_binary",
         help="Specify if pylenium should acquire the chrome binary version specified or latest",
     )
@@ -183,11 +182,5 @@ def pytest_addoption(parser):
 def pylenium_webdriver(request):
     driver_manager = DriverManager(request.config)
     request.addfinalizer(driver_manager.shutdown_driver)
-    yield driver_manager.start_driver()
-
-
-def pytest_configure(config) -> None:
-    """
-    Main entry point for the plugin, hooked by pytest using pluggy
-    :param config: The pytest config object
-    """
+    driver = driver_manager.start_driver()
+    yield driver
