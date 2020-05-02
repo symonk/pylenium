@@ -57,6 +57,6 @@ def test_cannot_set_browser_to_supported_choice(testdir):
         pass
     """
     )
-    result = testdir.runpytest("--browser=Unsupported")
-    result.stderr.fnmatch_lines(["*--browser: invalid choice: 'Unsupported'*"])
+    result = testdir.runpytest("--browser=unsupported")
+    result.stderr.fnmatch_lines(["*--browser: invalid choice: 'unsupported'*"])
     assert result.ret == ExitCode.USAGE_ERROR

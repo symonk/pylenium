@@ -195,7 +195,7 @@ def pytest_addoption(parser):
         default=None,
         dest="driver_listener",
         help="File path to your .py module which implements seleniums AbstractEventListener"
-        "n.b -> if passed; this will create an EventFiringWebDriver automatically",
+        "n.b -> if passed; this will create an EventFiringWebDriver automatically.",
     )
 
     group.addoption(
