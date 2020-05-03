@@ -6,6 +6,7 @@ from typing import Any
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
+from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from pylenium.webelement.pylenium_element import PyleniumWebElement
 
@@ -55,7 +56,8 @@ class ChromeDriverFactory(AbstractDriverFactory):
             desired_capabilities=self.desired_capabilities,
         )
         self._apply_custom_webelement_to_driver(driver)
-        return self._load_base_url_if_necessary(driver)
+        self._load_base_url_if_necessary(driver)
+        return self._wrap_driver_if_applicable(driver)
 
     def _load_base_url_if_necessary(self, driver) -> WebDriver:
         """
@@ -111,4 +113,17 @@ class ChromeDriverFactory(AbstractDriverFactory):
         :return: The driver instance for fluency
         """
         driver._web_element_cls = PyleniumWebElement
+        return driver
+
+    def _wrap_driver_if_applicable(self, driver) -> WebDriver:
+        """
+        Given the --driver-listener CLI arg, wrap the driver into an EventFiringWebDriver using the class passed
+        by the user; note their module should be discoverable by python and if it is not, we cannot possibly get here.
+        parser will raise a ValueError alerting them about the issue
+        :param driver: the webdriver instance to 'potentially' wrap
+        :return: the drriver instance for fluency
+        """
+        event_firing = self._config_pluck("driver_listener")
+        if event_firing is not None:
+            driver = EventFiringWebDriver(driver, event_firing())
         return driver

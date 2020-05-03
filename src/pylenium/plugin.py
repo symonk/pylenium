@@ -1,3 +1,4 @@
+import importlib
 from typing import Dict
 
 from pytest import fixture
@@ -9,7 +10,9 @@ from pylenium.constants.strings import FIREFOX
 from pylenium.webdriver.driver_manager import DriverManager
 from pylenium.utility.operating_system import is_py_file
 from pylenium.utility.operating_system import parse_capabilities_from_disk
+from selenium.webdriver.support.event_firing_webdriver import AbstractEventListener
 from pylenium.utility.network import validate_url
+from pytest import UsageError
 
 
 def pytest_addoption(parser):
@@ -189,13 +192,34 @@ def pytest_addoption(parser):
         help="When no locator is specified, default to this value",
     )
 
+    def validate_event_listener(path) -> AbstractEventListener:
+        """
+        Attempt to load the user provided module and check the subclass of their class implementation
+        :param path: the path provided by the user.  e.g -> mypackage.mymodule.MyEventListener
+        :return: the class reference, ready for instantiation and wrapping by the driver factories.
+        """
+        try:
+            _, mod_name, clazz_name = path.split(".")
+            loaded_module = importlib.import_module(mod_name)
+            user_clazz = getattr(loaded_module, clazz_name)
+            if not issubclass(user_clazz, AbstractEventListener):
+                raise ValueError(
+                    f"The event listener implementation provided: {path} was not a subclass of "
+                    f"{AbstractEventListener}"
+                )
+            return user_clazz
+        except Exception:
+            raise UsageError(
+                f"Unable to find the event driver subclass in {mod_name}.{clazz_name}"
+            ) from None
+
     group.addoption(
         "--driver-listener",
         action="store",
         default=None,
         dest="driver_listener",
-        help="File path to your .py module which implements seleniums AbstractEventListener"
-        "n.b -> if passed; this will create an EventFiringWebDriver automatically.",
+        type=lambda path: validate_event_listener(path),
+        help="package.module.class that is a subclass of seleniums AbstractEventListener",
     )
 
     group.addoption(
