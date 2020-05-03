@@ -2,9 +2,9 @@ import pytest
 from pytest import ExitCode
 
 
-@pytest.mark.skip
-def test_web_element_types(testdir):
-    testdir.makepyfile(
+@pytest.mark.requires_html("simple_element.html")
+def test_web_element_types(integration):
+    integration.makepyfile(
         """
         def test_element_type(pydriver):
             from pylenium import PyleniumWebElement
@@ -12,10 +12,5 @@ def test_web_element_types(testdir):
             assert isinstance(element, PyleniumWebElement)
         """
     )
-    result = testdir.runpytest(
-        "--acquire-binary",
-        "--base-url",
-        "http://localhost:8080/simple_element.html",
-        "--setup-show",
-    )
+    result = integration.run_headless_it()
     assert result.ret == ExitCode.OK

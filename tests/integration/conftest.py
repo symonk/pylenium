@@ -1,43 +1,44 @@
-from threading import Thread
+from pathlib import Path
 
+from _pytest.pytester import Testdir
 from pytest import fixture
-from http.server import HTTPServer
-from http.server import SimpleHTTPRequestHandler
-from os import path
 
 
-class CustomHandler(SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        tests_dir = path.abspath(path.abspath(path.curdir))
-        servable_content = path.join(tests_dir, "http_server_content")
-        super().__init__(*args, directory=servable_content, **kwargs)
+class CustomTestdir(Testdir):
+    server_url = None
+    run_headless_it = None
 
 
-@fixture(scope="session", autouse=True)
-def local_http_server(request) -> None:
-    """
-    Starts a local http server for selenium based integration testing; this only happens during integration tests
-    as any test in here should be exercising real life browser type behaviour
-    :param request: the pytest request fixture
-    """
-    if _is_xdist_worker_or_master(request.config):
-        server = HTTPServer(
-            server_address=("", 8080), RequestHandlerClass=CustomHandler
+@fixture(autouse=True)
+def integration(request, httpserver) -> CustomTestdir:
+    test_item = request.node
+    html_arg = [
+        list(marker.args)[0]
+        for marker in test_item.own_markers
+        if marker.name == "requires_html"
+    ]
+    if not html_arg:
+        html_arg = ["blank.html"]
+    if "integration" not in test_item.fixturenames:
+        return
+
+    # Test requires to be served HTML; at the moment we can only serve one file so we will pick the first
+    root_content_path = Path.joinpath(Path(__file__).parent, "http_server_content")
+    with open(Path.joinpath(root_content_path, html_arg[0]), "r") as file:
+        httpserver.serve_content(file.read())
+
+    integration = request.getfixturevalue("testdir")
+
+    def run_headless_it(*args, **kwargs):
+        return integration.inline_run(
+            "--headless",
+            "--acquire-binary",
+            "--base-url",
+            httpserver.url,
+            *args,
+            **kwargs
         )
-        threaded_server = Thread(target=server.serve_forever, daemon=True)
-        yield threaded_server.start()
 
-
-def _is_xdist_worker_or_master(config) -> bool:
-    """
-    Attempt to retrieve a gatewayid for xdist runs.
-    note: xdist does not honor session scope fixtures so it would launch N http servers
-    This way we check for the worker and only do this if (master) aka noxdist or gw0 the initial xdist slave
-    :param config: the pytest config object
-    :return: a boolean indicating if it is ok to do work for one process or is sequential
-    """
-    gatewayid = "master"
-    try:
-        gatewayid = config.slaveinput["slave_id"]
-    except AttributeError:
-        return gatewayid in {"master", "gw0"}
+    integration.server_url = httpserver.url
+    integration.run_headless_it = run_headless_it
+    yield integration

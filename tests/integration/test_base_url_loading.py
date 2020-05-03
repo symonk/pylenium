@@ -1,16 +1,15 @@
 from pytest import ExitCode
 
 
-def test_base_url_loading_is_correct(testdir):
-    testdir.makepyfile(
-        """
+def test_base_url_loading_is_correct(integration):
+    integration.makepyfile(
+        f"""
         def test_base_url_loading(pydriver):
-            assert pydriver.current_url == "http://localhost:8080/"
+
+            assert pydriver.current_url == "{integration.server_url}/"
         """
     )
-    result = testdir.runpytest(
-        "--base-url", "http://localhost:8080", "--acquire-binary", "--headless"
-    )
+    result = integration.run_headless_it()
     assert result.ret == ExitCode.OK
 
 
