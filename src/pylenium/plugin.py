@@ -1,5 +1,5 @@
 import importlib
-from typing import Dict
+from typing import Dict, Set
 
 from pytest import fixture
 
@@ -110,10 +110,15 @@ def pytest_addoption(parser):
         "Note: This .py file should contain a dictionary called 'capabilities' explicitly",
     )
 
+    def validate_chrome_options(options) -> Set:
+        split_options = set([x.strip() for x in options.split(",")])
+        return split_options
+
     group.addoption(
-        "--chrome-switches",
-        type=lambda option: option.strip().split(","),
-        help="delimited list of chrome options / switches",
+        "--chrome-opts",
+        type=lambda options: validate_chrome_options(options),
+        help="delimited list of chrome options / switches, each one is appended to options.addargument(x)",
+        dest="chrome_opts",
         default=[],
     )
 

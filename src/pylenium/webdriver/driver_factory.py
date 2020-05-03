@@ -90,13 +90,16 @@ class ChromeDriverFactory(AbstractDriverFactory):
         """
         if self.headless:
             self.chrome_options.add_argument("--headless")
-            self.chrome_options.add_argument("--disable-gpu")
         if self.resolution:
             self.chrome_options.add_argument(
                 f"--window-size={self.resolution.width},{self.resolution.height}"
             )
         if self.maximized:
             self.chrome_options.add_argument("--start-maximized")
+        user_chrome_options = self._config_pluck("chrome_opts")
+        if user_chrome_options:
+            for argument in user_chrome_options:
+                self.chrome_options.add_argument(argument)
 
     def _resolve_desired_capabilities(self) -> None:
         """
@@ -106,7 +109,8 @@ class ChromeDriverFactory(AbstractDriverFactory):
         """
         self.desired_capabilities = self.config.getoption("browser_capabilities")
 
-    def _apply_custom_webelement_to_driver(self, driver) -> WebDriver:
+    @staticmethod
+    def _apply_custom_webelement_to_driver(driver) -> WebDriver:
         """
         Modifies the instantiated drivers returned WebElement to our custom child class, this enables us to take more
         control of WebElements and make them a lot more test friendly
