@@ -4,6 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteDriver
 from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 from pylenium.webdriver.driver_factory import ChromeDriverFactory
 from pylenium.webdriver.driver_factory import AbstractDriverFactory
+from pylenium.configuration.pylenium_config import PyleniumConfig
 from typing import Dict
 
 
@@ -12,7 +13,7 @@ class DriverManager:
         "chrome": ChromeDriverFactory
     }
 
-    def __init__(self, config):
+    def __init__(self, config: PyleniumConfig):
         self.config = config
         self._thread_storage = threading.local()
         self._thread_storage.drivers = {}
@@ -29,10 +30,8 @@ class DriverManager:
         """
         driver = self.drivers.get(threading.get_ident(), None)
         if driver is None:
-            user_browser_specified = self.config.getoption("browser")
-            driver = self._supported_factories.get(user_browser_specified)(
-                self.config
-            ).create_driver()
+            callable_clazz = self._supported_factories.get(self.config.browser)
+            driver = callable_clazz(self.config).create_driver()
             self.drivers[threading.get_ident()] = driver
         return self._fetch_driver()
 

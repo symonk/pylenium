@@ -1,7 +1,6 @@
 from __future__ import annotations
 from abc import ABC
 from abc import abstractmethod
-from typing import Any
 
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -9,15 +8,16 @@ from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 from webdriver_manager.chrome import ChromeDriverManager
 from pylenium.webelement.pylenium_element import PyleniumWebElement
+from pylenium.configuration.pylenium_config import PyleniumConfig
 
 
 class AbstractDriverFactory(ABC):
-    def __init__(self, config):
+    def __init__(self, config: PyleniumConfig):
         self.config = config
-        self.base_url = self._config_pluck("base_url")
-        self.headless = self._config_pluck("headless")
-        self.resolution = self._config_pluck("browser_resolution")
-        self.maximized = not self._config_pluck("browser_not_maximized")
+        self.base_url = self.config.base_url
+        self.headless = self.config.headless
+        self.resolution = self.config.browser_resolution
+        self.maximized = not self.config.browser_not_maximized
 
     @abstractmethod
     def create_driver(self) -> WebDriver:
@@ -26,14 +26,6 @@ class AbstractDriverFactory(ABC):
         pytest CLI
         :return: an instance of remote web driver
         """
-
-    def _config_pluck(self, option) -> Any:
-        """
-        Quick way to retrieve a value from the pytest config specifying a default if it does not exist
-        :param option: the option (str) to go hunting for
-        :return: the value stored in the config options for the given option (key)
-        """
-        return self.config.getoption(option)
 
 
 class ChromeDriverFactory(AbstractDriverFactory):
@@ -78,9 +70,9 @@ class ChromeDriverFactory(AbstractDriverFactory):
         note: Driver-binary-path is validated at plugin load time, if we cannot find it we won't get this far
         :return: the path to the chrome-driver binary - downloaded or installed by the user
         """
-        if self._config_pluck("acquire_binary"):
+        if self.config.acquire_binary:
             return ChromeDriverManager().install()
-        return self._config_pluck("driver_binary_path")
+        return self.config.driver_binary_path
 
     def _resolve_options(self) -> None:
         """
@@ -96,7 +88,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
             )
         if self.maximized:
             self.chrome_options.add_argument("--start-maximized")
-        user_chrome_options = self._config_pluck("chrome_opts")
+        user_chrome_options = self.config.chrome_opts
         if user_chrome_options:
             for argument in user_chrome_options:
                 self.chrome_options.add_argument(argument)
@@ -107,7 +99,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
         note: we could do the merging our selves between options/capabilities but lets let selenium handle it for us.
         :return: None; this is done in-place on self.desired_capabilities
         """
-        self.desired_capabilities = self.config.getoption("browser_capabilities")
+        self.desired_capabilities = self.config.browser_capabilities
 
     @staticmethod
     def _apply_custom_webelement_to_driver(driver) -> WebDriver:
@@ -127,7 +119,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
         :param driver: the webdriver instance to 'potentially' wrap
         :return: the drriver instance for fluency
         """
-        event_firing = self._config_pluck("driver_listener")
+        event_firing = self.config.driver_listener
         if event_firing is not None:
             driver = EventFiringWebDriver(driver, event_firing())
         return driver

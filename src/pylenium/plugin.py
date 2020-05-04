@@ -12,6 +12,7 @@ from pylenium.utility.operating_system import is_py_file
 from pylenium.utility.operating_system import parse_capabilities_from_disk
 from selenium.webdriver.support.event_firing_webdriver import AbstractEventListener
 from pylenium.utility.network import validate_url
+from pylenium.configuration.pylenium_config import PyleniumConfig
 from pytest import UsageError
 
 
@@ -152,7 +153,7 @@ def pytest_addoption(parser):
         "--page-source-on-fail",
         action="store_true",
         default=False,
-        dest="store_page_source",
+        dest="page_source_on_fail",
         help="Store page source HTML for each test in the event of failures",
     )
 
@@ -160,7 +161,7 @@ def pytest_addoption(parser):
         "--screenshot-on-fail",
         action="store_true",
         default=False,
-        dest="store_screenshot",
+        dest="screenshot_on_fail",
         help="Store screenshot for each test in the event of failures",
     )
 
@@ -168,7 +169,7 @@ def pytest_addoption(parser):
         "--stack-trace-on-fail",
         action="store_true",
         default=False,
-        dest="store_stack_trace",
+        dest="stack_trace_on_fail",
         help="Store stack trace info for each test in the event of failures",
     )
 
@@ -176,7 +177,7 @@ def pytest_addoption(parser):
         "--click-with-js",
         action="store_true",
         default=False,
-        dest="click_with_js",
+        dest="click_with_javascript",
         help="Attempt to do clicks using a javascript wraparound",
     )
 
@@ -184,7 +185,7 @@ def pytest_addoption(parser):
         "--sendkeys-with-js",
         action="store_true",
         default=False,
-        dest="sendkeys_with_js",
+        dest="sendkeys_with_javascript",
         help="Attempt to do sendkeys using a javascript wraparound",
     )
 
@@ -235,9 +236,16 @@ def pytest_addoption(parser):
     )
 
 
+@fixture(scope="session")
+def pylenium_config(request) -> PyleniumConfig:
+    config_attrs = PyleniumConfig.get_attributes_as_strings()
+    kwargs = {key: request.config.getoption(key) for key in config_attrs}
+    return PyleniumConfig(**kwargs)
+
+
 @fixture(name="pydriver")
-def pylenium_webdriver(request):
-    driver_manager = DriverManager(request.config)
+def pylenium_webdriver(request, pylenium_config):
+    driver_manager = DriverManager(pylenium_config)
     request.addfinalizer(driver_manager.shutdown_driver)
     driver = driver_manager.start_driver()
     yield driver
