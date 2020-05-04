@@ -8,6 +8,9 @@ from pylenium.configuration.pylenium_config import PyleniumConfig
 from typing import Dict
 
 
+DRIVERS = threading.local().drivers = {}
+
+
 class DriverManager:
     _supported_factories: Dict[str, AbstractDriverFactory] = {
         "chrome": ChromeDriverFactory
@@ -15,9 +18,6 @@ class DriverManager:
 
     def __init__(self, config: PyleniumConfig):
         self.config = config
-        self._thread_storage = threading.local()
-        self._thread_storage.drivers = {}
-        self.drivers = self._thread_storage.drivers
 
     def start_driver(self) -> RemoteDriver:
         """
@@ -28,11 +28,11 @@ class DriverManager:
         :return: The instantiated instance of the driver, if one already was created for the create we will return it
         instead
         """
-        driver = self.drivers.get(threading.get_ident(), None)
+        driver = DRIVERS.get(threading.get_ident(), None)
         if driver is None:
-            callable_clazz = self._supported_factories.get(self.config.browser)
-            driver = callable_clazz(self.config).create_driver()
-            self.drivers[threading.get_ident()] = driver
+            factory = self._supported_factories.get(self.config.browser)
+            driver = factory(self.config).create_driver()
+            DRIVERS[threading.get_ident()] = driver
         return self._fetch_driver()
 
     def _fetch_driver(self) -> RemoteDriver:
@@ -42,13 +42,16 @@ class DriverManager:
         :return: an instance of RemoteWebDriver based on specification(s) provided.
         """
         try:
-            return self.drivers[threading.get_ident()]
+            return DRIVERS[threading.get_ident()]
         except KeyError:
             raise NoThreadedDriverFoundException(
                 f"No threaded driver found for this thread: {threading.get_ident()}"
             )
 
     def shutdown_driver(self) -> None:
+        """
+        Shuts down the thread local driver
+        """
         driver = self._fetch_driver()
         driver.quit()
-        self.drivers.pop(threading.get_ident())
+        DRIVERS.pop(threading.get_ident())
