@@ -238,9 +238,7 @@ def pytest_addoption(parser):
 
 @fixture(scope="session")
 def pylenium_config(request) -> PyleniumConfig:
-    config_attrs = PyleniumConfig.get_attributes_as_strings()
-    kwargs = {key: request.config.getoption(key) for key in config_attrs}
-    return PyleniumConfig(**kwargs)
+    return request.config.pylenium_config
 
 
 @fixture(name="pydriver")
@@ -254,3 +252,10 @@ def pylenium_webdriver(request, pylenium_config):
 @fixture(scope="session", name="py_desired_caps")
 def pylenium_desired_capabilities(request):
     return request.config.getoption("browser_capabilities")
+
+
+def pytest_configure(config):
+    # instantiate the 'global' config
+    config_attrs = PyleniumConfig.get_attributes_as_strings()
+    kwargs = {key: config.getoption(key) for key in config_attrs}
+    config.pylenium_config = PyleniumConfig(**kwargs)
