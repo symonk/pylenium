@@ -25,7 +25,7 @@ def test_browser_maximized_by_default(testdir):
         assert not request.config.getoption('browser_not_maximized')
     """
     )
-    result = testdir.runpytest("--acquire-binary")
+    result = testdir.runpytest()
     assert result.ret == ExitCode.OK
 
 
@@ -36,5 +36,5 @@ def test_browser_maximized_can_be_disabled(testdir):
         assert request.config.getoption('browser_not_maximized')
     """
     )
-    result = testdir.runpytest("--not-maximized", "--acquire-binary")
+    result = testdir.runpytest("--not-maximized")
     assert result.ret == ExitCode.OK

@@ -40,7 +40,5 @@ def test_browser_resolution_custom(testdir):
         assert height == '1080'
     """
     )
-    result = testdir.runpytest(
-        "--browser-resolution", "1920x1080", "--not-maximized", "--acquire-binary"
-    )
+    result = testdir.runpytest("--browser-resolution", "1920x1080", "--not-maximized")
     assert result.ret == ExitCode.OK

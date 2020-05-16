@@ -47,7 +47,5 @@ def test_desired_caps_get_loaded_into_browser(testdir):
             assert py_desired_caps['c'] == 3
         """
     )
-    result = testdir.runpytest(
-        "--browser-capabilities", capabilities, "--acquire-binary"
-    )
+    result = testdir.runpytest("--browser-capabilities", capabilities)
     assert result.ret == ExitCode.OK

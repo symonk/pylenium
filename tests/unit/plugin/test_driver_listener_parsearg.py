@@ -1,4 +1,3 @@
-
 from pytest import ExitCode
 
 
@@ -30,7 +29,7 @@ def test_event_listener_can_be_passed(testdir):
 
 def test_no_listener_is_none_by_default(testdir):
     testdir.makepyfile(
-        f"""
+        """
        def test_event_listener(request):
            assert request.config.getoption('driver_listener') is None
        """
@@ -41,7 +40,7 @@ def test_no_listener_is_none_by_default(testdir):
 
 def test_no_such_class_found_raises(testdir):
     testdir.makepyfile(
-        f"""
+        """
        def test_no_valid_listener(request):
            pass
        """

@@ -5,7 +5,7 @@ def test_event_listener_is_wrapped(integration):
     pkg, mod, clazz = "tpkg", "tmod", "Wrapper"
     pkg_file = integration.mkpydir(pkg)
     mod_file = integration.makepyfile(
-        tmod=f"""
+        tmod="""
     from selenium.webdriver.support.event_firing_webdriver import AbstractEventListener
 
     class {clazz}(AbstractEventListener):
@@ -16,7 +16,7 @@ def test_event_listener_is_wrapped(integration):
     mod_file.move(pkg_file.join(mod_file.basename))
     expected = f"{pkg}.{mod}.{clazz}"
     integration.makepyfile(
-        f"""
+        """
     def test_event_listener_is_wrapped(pydriver):
         from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
         assert isinstance(pydriver, EventFiringWebDriver)

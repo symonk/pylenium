@@ -27,16 +27,11 @@ def integration(request, httpserver) -> CustomTestdir:
     with open(Path.joinpath(root_content_path, html_arg[0]), "r") as file:
         httpserver.serve_content(file.read())
 
-    integration = request.getfixturevalue("testdir")
+    integration: Testdir = request.getfixturevalue("testdir")
 
     def run_headless_it(*args, **kwargs):
-        return integration.inline_run(
-            "--headless",
-            "--acquire-binary",
-            "--base-url",
-            httpserver.url,
-            *args,
-            **kwargs
+        return integration.runpytest(
+            "--headless", "--base-url", httpserver.url, *args, **kwargs
         )
 
     integration.server_url = httpserver.url

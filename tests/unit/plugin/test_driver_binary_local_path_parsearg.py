@@ -22,8 +22,8 @@ def test_driver_binary_path_default(testdir):
     testdir.makepyfile(
         """
     def test_driver_binary_path_default(request):
-        assert request.config.getoption('driver_binary_path') is None
-    """
+        assert request.config.getoption('driver_binary_path') is 'acquire'
+        """
     )
     result = testdir.inline_run()
     assert result.ret == ExitCode.OK

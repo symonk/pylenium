@@ -5,19 +5,17 @@ from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 from pylenium.webdriver.driver_factory import ChromeDriverFactory
 from pylenium.webdriver.driver_factory import AbstractDriverFactory
 from pylenium.configuration.pylenium_config import PyleniumConfig
-from typing import Dict
-
-
-DRIVERS = threading.local().drivers = {}
+from typing import Dict, Type
 
 
 class DriverManager:
-    _supported_factories: Dict[str, AbstractDriverFactory] = {
+    _supported_factories: Dict[str, Type[AbstractDriverFactory]] = {
         "chrome": ChromeDriverFactory
     }
 
     def __init__(self, config: PyleniumConfig):
         self.config = config
+        self.drivers = threading.local().drivers = {}
 
     def start_driver(self) -> RemoteDriver:
         """
@@ -28,11 +26,11 @@ class DriverManager:
         :return: The instantiated instance of the driver, if one already was created for the create we will return it
         instead
         """
-        driver = DRIVERS.get(threading.get_ident(), None)
+        driver = self.drivers.get(threading.get_ident(), None)
         if driver is None:
             factory = self._supported_factories.get(self.config.browser)
             driver = factory(self.config).create_driver()
-            DRIVERS[threading.get_ident()] = driver
+            self.drivers[threading.get_ident()] = driver
         return self._fetch_driver()
 
     def _fetch_driver(self) -> RemoteDriver:
@@ -42,11 +40,11 @@ class DriverManager:
         :return: an instance of RemoteWebDriver based on specification(s) provided.
         """
         try:
-            return DRIVERS[threading.get_ident()]
+            return self.drivers[threading.get_ident()]
         except KeyError:
             raise NoThreadedDriverFoundException(
                 f"No threaded driver found for this thread: {threading.get_ident()}"
-            )
+            ) from None
 
     def shutdown_driver(self) -> None:
         """
@@ -54,4 +52,4 @@ class DriverManager:
         """
         driver = self._fetch_driver()
         driver.quit()
-        DRIVERS.pop(threading.get_ident())
+        self.drivers.pop(threading.get_ident())

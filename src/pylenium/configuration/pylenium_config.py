@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Callable, Set
 
 
-@dataclass(frozen=True)
+@dataclass()
 class PyleniumConfig:
     """
     The pylenium config; built up by the plugin and consumed by the driver factories.
@@ -15,7 +15,6 @@ class PyleniumConfig:
     selenium_grid_url: str
     browser_resolution: str
     browser_version: str
-    acquire_binary: bool
     driver_binary_path: str
     browser_capabilities: dict
     chrome_opts: list

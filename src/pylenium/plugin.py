@@ -76,16 +76,9 @@ def pytest_addoption(parser):
     )
 
     group.addoption(
-        "--acquire-binary",
-        action="store_true",
-        dest="acquire_binary",
-        help="Specify if pylenium should acquire the chrome binary version specified or latest",
-    )
-
-    group.addoption(
         "--driver-binary-path",
         action="store",
-        default=None,
+        default="acquire",
         dest="driver_binary_path",
         help="If not using acquire binary, set the directory pylenium should look for the driver binary",
     )
@@ -238,15 +231,16 @@ def pytest_addoption(parser):
 
 @fixture(scope="session")
 def pylenium_config(request) -> PyleniumConfig:
-    return request.config.pylenium_config
+    config_attrs = PyleniumConfig.get_attributes_as_strings()
+    kwargs = {key: request.config.getoption(key) for key in config_attrs}
+    return PyleniumConfig(**kwargs)
 
 
 @fixture(name="pydriver")
 def pylenium_webdriver(request, pylenium_config):
     driver_manager = DriverManager(pylenium_config)
     request.addfinalizer(driver_manager.shutdown_driver)
-    driver = driver_manager.start_driver()
-    yield driver
+    return driver_manager.start_driver()
 
 
 @fixture(scope="session", name="py_desired_caps")
@@ -254,8 +248,10 @@ def pylenium_desired_capabilities(request):
     return request.config.getoption("browser_capabilities")
 
 
-def pytest_configure(config):
-    # instantiate the 'global' config
-    config_attrs = PyleniumConfig.get_attributes_as_strings()
-    kwargs = {key: config.getoption(key) for key in config_attrs}
-    config.pylenium_config = PyleniumConfig(**kwargs)
+def pytest_configure(config) -> None:
+    """
+    pytest config entry point for the plugin, occurs after cmdline hooks but prior to session.
+    note: a lot of this needs improved upon; honestly im not sure how to manage 'global' state when
+    coupled to a pytest plugin, singletons feel like the only real option here?
+    :param config: the pytest config
+    """

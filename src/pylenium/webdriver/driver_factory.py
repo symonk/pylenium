@@ -70,7 +70,7 @@ class ChromeDriverFactory(AbstractDriverFactory):
         note: Driver-binary-path is validated at plugin load time, if we cannot find it we won't get this far
         :return: the path to the chrome-driver binary - downloaded or installed by the user
         """
-        if self.config.acquire_binary:
+        if self.config.driver_binary_path == "acquire":
             return ChromeDriverManager().install()
         return self.config.driver_binary_path
 
