@@ -248,6 +248,17 @@ def pylenium_desired_capabilities(request):
     return request.config.getoption("browser_capabilities")
 
 
+@fixture(name="pylenium")
+def _pylenium(request, pydriver):
+    """
+    Use this fixture to compose within your page objects a self.pylenium
+    This is the complete bread and butter and includes all element interaction(s) with built in framework support
+    locating of elements etc
+    :param request:
+    :return: an instance of Pylenium, this should be passed into page objects and a reference stored
+    """
+
+
 def pytest_configure(config) -> None:
     """
     pytest config entry point for the plugin, occurs after cmdline hooks but prior to session.
