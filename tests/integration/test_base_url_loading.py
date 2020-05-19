@@ -1,7 +1,7 @@
 from pytest import ExitCode
 
 
-def test_base_url_loading_is_correct(integration):
+def test_base_url_loading_is_correct(request, integration):
     integration.makepyfile(
         f"""
         def test_base_url_loading(pydriver):

@@ -7,6 +7,8 @@ from pylenium.webdriver.driver_factory import AbstractDriverFactory
 from pylenium.configuration.pylenium_config import PyleniumConfig
 from typing import Dict, Type
 
+pylenium_config = None
+
 
 class DriverManager:
     _supported_factories: Dict[str, Type[AbstractDriverFactory]] = {
