@@ -3,13 +3,14 @@ from typing import Callable, Optional
 from pylenium.constants.strings import CHROME
 from pylenium.constants.strings import GRID_LOCALHOST
 
+
 BROWSER = CHROME
 HEADLESS = False
 SELENIUM_GRID_URL: str = GRID_LOCALHOST
 BROWSER_RESOLUTION: str = "1280x1024"
 BROWSER_VERSION: str = "latest"
 DRIVER_BINARY_PATH: str = "acquire"
-browser_capabilities: Optional[dict] = {}
+BROWSER_CAPABILITIES: Optional[dict] = {}
 CHROME_OPTS: Optional[list] = None
 BASE_URL: Optional[str] = None
 EXPLICIT_WAIT: int = 30
@@ -22,3 +23,25 @@ SENDKEYS_WITH_JAVASCRIPT: bool = False
 DEFAULT_SELECTOR: str = "id"
 DRIVER_LISTENER: Optional[Callable] = None
 BROWSER_NOT_MAXIMIZED: bool = False
+
+__all__ = [
+    "BROWSER",
+    "HEADLESS",
+    "SELENIUM_GRID_URL",
+    "BROWSER_RESOLUTION",
+    "BROWSER_VERSION",
+    "DRIVER_BINARY_PATH",
+    "BROWSER_CAPABILITIES",
+    "CHROME_OPTS",
+    "BASE_URL",
+    "EXPLICIT_WAIT",
+    "POLLING_INTERVAL",
+    "PAGE_SOURCE_ON_FAIL",
+    "SCREENSHOT_ON_FAIL",
+    "STACK_TRACE_ON_FAIL",
+    "CLICK_WITH_JAVASCRIPT",
+    "SENDKEYS_WITH_JAVASCRIPT",
+    "DEFAULT_SELECTOR",
+    "DRIVER_LISTENER",
+    "BROWSER_NOT_MAXIMIZED",
+]

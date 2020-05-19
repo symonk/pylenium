@@ -10,25 +10,25 @@ class PyleniumConfig:
     This config should not be overwritten at runtime as it applies to all instantiated browsers.
     """
 
-    browser: str
-    headless: bool
-    selenium_grid_url: str
-    browser_resolution: str
-    browser_version: str
-    driver_binary_path: str
-    browser_capabilities: dict
-    chrome_opts: list
-    base_url: str
-    explicit_wait: int
-    polling_interval: int
-    page_source_on_fail: bool
-    screenshot_on_fail: bool
-    stack_trace_on_fail: bool
-    click_with_javascript: bool
-    sendkeys_with_javascript: bool
-    default_selector: str
-    driver_listener: Callable
-    browser_not_maximized: bool
+    BROWSER: str
+    HEADLESS: bool
+    SELENIUM_GRID_URL: str
+    BROWSER_RESOLUTION: str
+    BROWSER_VERSION: str
+    DRIVER_BINARY_PATH: str
+    BROWSER_CAPABILITIES: dict
+    CHROME_OPTS: list
+    BASE_URL: str
+    EXPLICIT_WAIT: int
+    POLLING_INTERVAL: int
+    PAGE_SOURCE_ON_FAIL: bool
+    SCREENSHOT_ON_FAIL: bool
+    STACK_TRACE_ON_FAIL: bool
+    CLICK_WITH_JAVASCRIPT: bool
+    SENDKEYS_WITH_JAVASCRIPT: bool
+    DEFAULT_SELECTOR: str
+    DRIVER_LISTENER: Callable
+    BROWSER_NOT_MAXIMIZED: bool
 
     @staticmethod
     def get_attributes_as_strings() -> Set:

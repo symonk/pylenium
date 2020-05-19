@@ -83,6 +83,14 @@ def pytest_addoption(parser):
         help="If not using acquire binary, set the directory pylenium should look for the driver binary",
     )
 
+    group.addoption(
+        "--config-overrides-path",
+        action="store",
+        default=None,
+        dest="config_overrides_path",
+        help="Path of a .py file which contains pylenium config overrides to be loaded into the PyleniumConfig",
+    )
+
     def _resolve_capabilities(file_path: str) -> Dict:
         """
         Takes the --desired-capabilities file path, validates it and returns into the config a dictionary of the

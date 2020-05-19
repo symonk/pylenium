@@ -30,7 +30,7 @@ class DriverManager:
         """
         driver = self.drivers.get(threading.get_ident(), None)
         if driver is None:
-            factory = self._supported_factories.get(self.config.browser)
+            factory = self._supported_factories.get(self.config.BROWSER)
             driver = factory(self.config).create_driver()
             self.drivers[threading.get_ident()] = driver
         return self._fetch_driver()
