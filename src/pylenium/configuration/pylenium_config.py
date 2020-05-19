@@ -7,7 +7,7 @@ class PyleniumConfig:
     """
     The pylenium config; built up by the plugin and consumed by the driver factories.
     Also available in tests via the pylenium_config session scoped fixture.
-    This config is immutable, populating by CLI args and should not be changed
+    This config should not be overwritten at runtime as it applies to all instantiated browsers.
     """
 
     browser: str

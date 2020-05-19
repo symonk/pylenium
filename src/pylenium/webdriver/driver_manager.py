@@ -4,8 +4,8 @@ from selenium.webdriver.remote.webdriver import WebDriver as RemoteDriver
 from pylenium.exceptions.exceptions import NoThreadedDriverFoundException
 from pylenium.webdriver.driver_factory import ChromeDriverFactory
 from pylenium.webdriver.driver_factory import AbstractDriverFactory
-from pylenium.configuration.pylenium_config import PyleniumConfig
 from typing import Dict, Type
+
 
 pylenium_config = None
 
@@ -15,8 +15,8 @@ class DriverManager:
         "chrome": ChromeDriverFactory
     }
 
-    def __init__(self, config: PyleniumConfig):
-        self.config = config
+    def __init__(self):
+        self.config = pylenium_config
         self.drivers = threading.local().drivers = {}
 
     def start_driver(self) -> RemoteDriver:

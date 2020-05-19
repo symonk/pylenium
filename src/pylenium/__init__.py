@@ -27,7 +27,10 @@
 #
 from .webdriver.driver_manager import DriverManager
 from .webelement.pylenium_element import PyleniumWebElement
+from .configuration.pylenium_config import PyleniumConfig
 from .utility.operating_system import is_py_file
 from .utility.network import validate_url
+
+default_config = PyleniumConfig()
 
 all = [DriverManager, PyleniumWebElement, is_py_file, validate_url]
